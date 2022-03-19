@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>themes/dark.qss</file>
+        <file>themes/midnight.qss</file>
+    </qresource>
+</RCC>

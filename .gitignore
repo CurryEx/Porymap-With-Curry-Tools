@@ -1,0 +1,22 @@
+Makefile
+porymap.pro.user
+*.autosave
+*.stash
+*.o
+*.DS_Store
+porymap.app*
+porymap
+porymap.cfg
+porymap.log
+
+# Qt generated files
+ui_*.h
+moc_*.h
+moc_*.cpp
+qrc_*.cpp
+
+cmake-build-*
+.github
+.idea
+.git
+build
