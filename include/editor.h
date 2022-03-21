@@ -105,6 +105,9 @@ public:
     void updateCursorRectPos(int x, int y);
     void setCursorRectVisible(bool visible);
 
+    //@Curry
+    void on_actionImportToMap_triggered() const;
+
     QGraphicsScene *scene = nullptr;
     QGraphicsPixmapItem *current_view = nullptr;
     MapPixmapItem *map_item = nullptr;

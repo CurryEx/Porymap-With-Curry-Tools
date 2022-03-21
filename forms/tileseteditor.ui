@@ -47,7 +47,7 @@
          <x>0</x>
          <y>0</y>
          <width>272</width>
-         <height>625</height>
+         <height>638</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -414,8 +414,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>384</width>
-            <height>265</height>
+            <width>400</width>
+            <height>318</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
@@ -543,9 +543,19 @@
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
    </widget>
+   <widget class="QMenu" name="menuCurryToolbox">
+    <property name="title">
+     <string>咖喱的小工具</string>
+    </property>
+    <addaction name="actionImportImageToTiles"/>
+    <addaction name="actionImportImageToMetatileReferToTiles"/>
+    <addaction name="actionExpandPrimaryTile"/>
+    <addaction name="actionExpandSecondaryTile"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuTools"/>
+   <addaction name="menuCurryToolbox"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_Tileset">
@@ -634,6 +644,31 @@
   <action name="actionImport_Secondary_Metatiles">
    <property name="text">
     <string>Import Secondary Metatiles from Advance Map 1.92...</string>
+   </property>
+  </action>
+  <action name="actionImportImageToTiles">
+   <property name="text">
+    <string>压缩并导入图片到Tiles</string>
+   </property>
+  </action>
+  <action name="actionImportImageToMetatileReferToTiles">
+   <property name="text">
+    <string>根据Tiles生成图片到Metatile</string>
+   </property>
+  </action>
+  <action name="actionCompressAndImportImageToMetatile">
+   <property name="text">
+    <string>压缩并导入图片到Metatile</string>
+   </property>
+  </action>
+  <action name="actionExpandPrimaryTile">
+   <property name="text">
+    <string>扩充PrimaryTiles</string>
+   </property>
+  </action>
+  <action name="actionExpandSecondaryTile">
+   <property name="text">
+    <string>扩充SecondaryTiles</string>
    </property>
   </action>
  </widget>

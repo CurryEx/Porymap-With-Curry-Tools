@@ -2054,7 +2054,7 @@ DraggablePixmapItem* Editor::addNewEvent(QString event_type) {
             event->put("index", project->healLocations.length());
         }
         map->editHistory.push(new EventCreate(this, map, event));
-        
+
         return event->pixmapItem;
     }
     return nullptr;
@@ -2187,3 +2187,115 @@ void Editor::objectsView_onMousePress(QMouseEvent *event) {
     }
     selectingEvent = false;
 }
+
+void Editor::on_actionImportToMap_triggered() const
+{
+    //建一个警告框给后面用
+    QMessageBox msgBox;
+    msgBox.setText("失败");
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Critical);
+
+    //打开json文件
+    QString filepath = QFileDialog::getOpenFileName(
+            nullptr,
+            QString("打开导入辅助文件"),
+            this->project->root,
+            "辅助json (*.json)");
+    if (filepath.isEmpty())
+    {
+        return;
+    }
+    QFile file(filepath);
+    if(!file.open(QIODevice::ReadWrite))
+    {
+        msgBox.setInformativeText(QString("文件打开失败"));
+        msgBox.exec();
+        return;
+    }
+
+    auto* jsonParserError = new QJsonParseError();
+    QJsonDocument jsonDocument = QJsonDocument::fromJson( file.readAll(), jsonParserError );
+    if(jsonParserError->error != QJsonParseError::NoError)
+    {
+        msgBox.setInformativeText(QString("文件解析失败"));
+        msgBox.exec();
+        return;
+    }
+    QJsonArray arr;
+    int height;
+    int width;
+    if ( jsonDocument.isObject() )
+    {
+        QJsonObject jsonObject = jsonDocument.object();
+        if(jsonObject.contains( "width" ) && jsonObject.contains( "height" ))
+        {
+            if ( jsonObject.contains( "sequence" ) && jsonObject.value( "sequence" ).isArray() )
+            {
+                height = jsonObject.value( "height" ).toInt();
+                width = jsonObject.value( "width" ).toInt();
+                arr = jsonObject.value( "sequence" ).toArray();
+            }
+        }
+    }
+    if(arr.count()==0)
+    {
+        msgBox.setInformativeText(QString("文件解析失败"));
+        msgBox.exec();
+        return;
+    }
+
+    //输入参数
+    QDialog dialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+    dialog.setWindowTitle("插入图片参数");
+    dialog.setWindowModality(Qt::NonModal);
+
+    QFormLayout form(&dialog);
+
+    auto *QSBx = new QSpinBox();
+    auto *QSBy = new QSpinBox();
+    QSBx->setMinimum(0);
+    QSBy->setMinimum(0);
+    QSBx->setMaximum(999);
+    QSBy->setMaximum(999);
+    form.addRow(new QLabel(QString("要插入的图块宽高为 %1 x %2\n\n请输入插入坐标 若没有记录请返回后将鼠标放在地图上 在软件左下角查看")
+    .arg(width).arg(height)));
+    form.addRow(new QLabel("插入位置x"), QSBx);
+    form.addRow(new QLabel("插入位置y"), QSBy);
+
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
+    connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    form.addRow(&buttonBox);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        int x = QSBx->value();
+        int y = QSBy->value();
+        if(x+width>map->getWidth()||y+height>map->getHeight())
+        {
+            msgBox.setInformativeText("输入的xy坐标容不下将插入的图块");
+            msgBox.exec();
+            return;
+        }
+        auto *progressDialog = new QProgressDialog;
+        progressDialog->setWindowModality(Qt::WindowModal);
+        progressDialog->setMinimumDuration(0);
+        progressDialog->setCancelButton(nullptr);
+        progressDialog->setWindowTitle(tr("请稍等"));
+        progressDialog->setLabelText("喝杯Java 耐心等待\n\n若出现未响应为正常现象");
+        progressDialog->setRange(0, height*width);
+        for(int i=0;i<height;i++)
+        {
+            for(int j=0;j<width;j++)
+            {
+                progressDialog->setValue(i*width+j);
+                this->metatile_selector_item->select(arr.at(i*width+j).toInt());
+                this->map_item->paintNormal(x+j,y+i,true);
+            }
+        }
+        this->map_item->draw(true);
+        ui->graphicsView_Map->scene()->update();
+        progressDialog->close();
+    }
+}
+

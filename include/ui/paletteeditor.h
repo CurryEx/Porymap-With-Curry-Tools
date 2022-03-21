@@ -58,6 +58,7 @@ private slots:
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
     void on_actionImport_Palette_triggered();
+    void on_actionImport_new_palette_triggered();
 };
 
 #endif // PALETTEEDITOR_H

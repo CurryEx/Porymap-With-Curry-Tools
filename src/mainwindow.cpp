@@ -3206,3 +3206,9 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
     QMainWindow::closeEvent(event);
 }
+
+//@Curry
+void MainWindow::on_actionImportToMap_triggered()
+{
+    this->editor->on_actionImportToMap_triggered();
+}

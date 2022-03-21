@@ -103,6 +103,16 @@ private slots:
 
     void on_actionImport_Secondary_Metatiles_triggered();
 
+    //Curry
+    void on_actionImportImageToTiles_triggered();
+
+    void on_actionImportImageToMetatileReferToTiles_triggered();
+
+
+    void on_actionExpandPrimaryTile_triggered();
+
+    void on_actionExpandSecondaryTile_triggered();
+
 private:
     void initUi();
     void setMetatileBehaviors();
@@ -127,6 +137,18 @@ private:
     void closeEvent(QCloseEvent*);
     void countMetatileUsage();
     void countTileUsage();
+
+    //Curry
+    enum MatchResult {
+        NOT_MATCH = 0,
+        MATCH,
+        X_FLIP,
+        Y_FLIP,
+        XY_FLIP
+    };
+    static MatchResult matchImage(const QImage& image1, const QImage& image2, bool allowFlip);
+    QList<Tile> matchTile(const QImage& image);
+    void expandTiles(bool isPrimary);
 
     Ui::TilesetEditor *ui;
     History<MetatileHistoryItem*> metatileHistory;

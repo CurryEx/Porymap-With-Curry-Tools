@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>817</width>
-    <height>739</height>
+    <height>749</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -1644,7 +1644,7 @@
      <x>0</x>
      <y>0</y>
      <width>817</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuEdit">
@@ -1659,6 +1659,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionImport_Palette"/>
+    <addaction name="actionImport_new_palette"/>
    </widget>
    <addaction name="menuEdit"/>
    <addaction name="menuTools"/>
@@ -1689,6 +1690,11 @@
   <action name="actionImport_Palette">
    <property name="text">
     <string>Import Palette</string>
+   </property>
+  </action>
+  <action name="actionImport_new_palette">
+   <property name="text">
+    <string>导入新版PS色板</string>
    </property>
   </action>
  </widget>

@@ -344,7 +344,7 @@
                     <number>0</number>
                    </property>
                    <item row="0" column="0">
-                    <widget class="MapView" name="graphicsView_Map">
+                    <widget class="MapView" name="graphicsView_Map" native="true">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                        <horstretch>0</horstretch>
@@ -356,24 +356,6 @@
                      </property>
                      <property name="autoFillBackground">
                       <bool>false</bool>
-                     </property>
-                     <property name="verticalScrollBarPolicy">
-                      <enum>Qt::ScrollBarAsNeeded</enum>
-                     </property>
-                     <property name="horizontalScrollBarPolicy">
-                      <enum>Qt::ScrollBarAsNeeded</enum>
-                     </property>
-                     <property name="sizeAdjustPolicy">
-                      <enum>QAbstractScrollArea::AdjustIgnored</enum>
-                     </property>
-                     <property name="dragMode">
-                      <enum>QGraphicsView::NoDrag</enum>
-                     </property>
-                     <property name="transformationAnchor">
-                      <enum>QGraphicsView::AnchorUnderMouse</enum>
-                     </property>
-                     <property name="resizeAnchor">
-                      <enum>QGraphicsView::AnchorUnderMouse</enum>
                      </property>
                     </widget>
                    </item>
@@ -714,14 +696,14 @@
                          </widget>
                         </item>
                         <item row="0" column="1">
-                         <widget class="NoScrollComboBox" name="comboBox_PrimaryTileset">
+                         <widget class="NoScrollComboBox" name="comboBox_PrimaryTileset" native="true">
                           <property name="focusPolicy">
                            <enum>Qt::StrongFocus</enum>
                           </property>
                           <property name="toolTip">
                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Primary Tileset&lt;/p&gt;&lt;p&gt;Defines the first 0x200 metatiles available for the map.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                           </property>
-                          <property name="editable">
+                          <property name="editable" stdset="0">
                            <bool>true</bool>
                           </property>
                          </widget>
@@ -734,14 +716,14 @@
                          </widget>
                         </item>
                         <item row="1" column="1">
-                         <widget class="NoScrollComboBox" name="comboBox_SecondaryTileset">
+                         <widget class="NoScrollComboBox" name="comboBox_SecondaryTileset" native="true">
                           <property name="focusPolicy">
                            <enum>Qt::StrongFocus</enum>
                           </property>
                           <property name="toolTip">
                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Secondary Tileset&lt;/p&gt;&lt;p&gt;Defines the second 0x200 metatiles available for the map.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                           </property>
-                          <property name="editable">
+                          <property name="editable" stdset="0">
                            <bool>true</bool>
                           </property>
                          </widget>
@@ -832,7 +814,7 @@
                                 <x>0</x>
                                 <y>0</y>
                                 <width>428</width>
-                                <height>77</height>
+                                <height>75</height>
                                </rect>
                               </property>
                               <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -1022,7 +1004,7 @@
                           <x>0</x>
                           <y>0</y>
                           <width>411</width>
-                          <height>449</height>
+                          <height>452</height>
                          </rect>
                         </property>
                         <property name="sizePolicy">
@@ -1173,7 +1155,7 @@
                           <x>0</x>
                           <y>0</y>
                           <width>428</width>
-                          <height>704</height>
+                          <height>701</height>
                          </rect>
                         </property>
                         <layout class="QGridLayout" name="gridLayout_7">
@@ -1414,6 +1396,12 @@
                         <spacer name="horizontalSpacer_3">
                          <property name="orientation">
                           <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>0</width>
+                           <height>0</height>
+                          </size>
                          </property>
                         </spacer>
                        </item>
@@ -1781,11 +1769,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="NoScrollComboBox" name="comboBox_Song">
+                <widget class="NoScrollComboBox" name="comboBox_Song" native="true">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The default background music for this map.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
-                 <property name="editable">
+                 <property name="editable" stdset="0">
                   <bool>true</bool>
                  </property>
                 </widget>
@@ -1798,11 +1786,11 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="NoScrollComboBox" name="comboBox_Location">
+                <widget class="NoScrollComboBox" name="comboBox_Location" native="true">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The section of the region map which the map is grouped under. This also determines the name of the map that is display when the player enters it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
-                 <property name="editable">
+                 <property name="editable" stdset="0">
                   <bool>true</bool>
                  </property>
                 </widget>
@@ -1832,11 +1820,11 @@
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="NoScrollComboBox" name="comboBox_Weather">
+                <widget class="NoScrollComboBox" name="comboBox_Weather" native="true">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The default weather for this map.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
-                 <property name="editable">
+                 <property name="editable" stdset="0">
                   <bool>true</bool>
                  </property>
                 </widget>
@@ -1849,11 +1837,11 @@
                 </widget>
                </item>
                <item row="4" column="1">
-                <widget class="NoScrollComboBox" name="comboBox_Type">
+                <widget class="NoScrollComboBox" name="comboBox_Type" native="true">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The map type is a general attribute, which is used for many different things. For example. it determines whether biking or running is allowed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
-                 <property name="editable">
+                 <property name="editable" stdset="0">
                   <bool>true</bool>
                  </property>
                 </widget>
@@ -1866,11 +1854,11 @@
                 </widget>
                </item>
                <item row="6" column="1">
-                <widget class="NoScrollComboBox" name="comboBox_BattleScene">
+                <widget class="NoScrollComboBox" name="comboBox_BattleScene" native="true">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Determines the type of battle scene graphics to use.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
-                 <property name="editable">
+                 <property name="editable" stdset="0">
                   <bool>true</bool>
                  </property>
                 </widget>
@@ -2319,11 +2307,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="NoScrollComboBox" name="comboBox_ConnectedMap">
+                   <widget class="NoScrollComboBox" name="comboBox_ConnectedMap" native="true">
                     <property name="toolTip">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The destination map name of the connection.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
-                    <property name="editable">
+                    <property name="editable" stdset="0">
                      <bool>true</bool>
                     </property>
                    </widget>
@@ -2349,30 +2337,10 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="NoScrollComboBox" name="comboBox_ConnectionDirection">
+                   <widget class="NoScrollComboBox" name="comboBox_ConnectionDirection" native="true">
                     <property name="toolTip">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The direction of the connection.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>up</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>right</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>down</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>left</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item>
@@ -2429,11 +2397,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="NoScrollComboBox" name="comboBox_DiveMap">
+                   <widget class="NoScrollComboBox" name="comboBox_DiveMap" native="true">
                     <property name="toolTip">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Destination map name when using &lt;span style=&quot; font-weight:600;&quot;&gt;Dive&lt;/span&gt;. If empty, no such connection will exist.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
-                    <property name="editable">
+                    <property name="editable" stdset="0">
                      <bool>true</bool>
                     </property>
                    </widget>
@@ -2446,11 +2414,11 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="NoScrollComboBox" name="comboBox_EmergeMap">
+                   <widget class="NoScrollComboBox" name="comboBox_EmergeMap" native="true">
                     <property name="toolTip">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Destination map name when emerging using &lt;span style=&quot; font-weight:600;&quot;&gt;Dive&lt;/span&gt;. If empty, no such connection will exist.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
-                    <property name="editable">
+                    <property name="editable" stdset="0">
                      <bool>true</bool>
                     </property>
                    </widget>
@@ -2593,7 +2561,7 @@
      <x>0</x>
      <y>0</y>
      <width>1287</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2665,12 +2633,19 @@
     <addaction name="actionEdit_Preferences"/>
     <addaction name="actionEdit_Shortcuts"/>
    </widget>
+   <widget class="QMenu" name="menuCurryToolbox">
+    <property name="title">
+     <string>咖喱的小工具</string>
+    </property>
+    <addaction name="actionImportToMap"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuTools"/>
    <addaction name="menuOptions"/>
    <addaction name="menuHelp"/>
+   <addaction name="menuCurryToolbox"/>
   </widget>
   <action name="action_Save_Project">
    <property name="text">
@@ -2963,12 +2938,22 @@
     <string>Import Map from Advance Map 1.92...</string>
    </property>
   </action>
+  <action name="actionImportToMap">
+   <property name="text">
+    <string>导入到地图</string>
+   </property>
+  </action>
+  <action name="actionCTilesetEditor">
+   <property name="text">
+    <string>CTilesetEditor</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
    <class>NoScrollComboBox</class>
-   <extends>QComboBox</extends>
+   <extends>QWidget</extends>
    <header>noscrollcombobox.h</header>
   </customwidget>
   <customwidget>
@@ -2976,11 +2961,6 @@
    <extends>QStackedWidget</extends>
    <header>adjustingstackedwidget.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>GraphicsView</class>
-   <extends>QGraphicsView</extends>
-   <header>graphicsview.h</header>
   </customwidget>
   <customwidget>
    <class>NewEventToolButton</class>
@@ -2991,6 +2971,11 @@
    <class>QTabBar</class>
    <extends>QWidget</extends>
    <header>qtabbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MapView</class>
+   <extends>QWidget</extends>
+   <header>mapview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

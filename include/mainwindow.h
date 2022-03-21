@@ -338,6 +338,9 @@ private slots:
     void on_actionEdit_Preferences_triggered();
     void togglePreferenceSpecificUi();
 
+    //@Curry
+    void on_actionImportToMap_triggered();
+
 private:
     Ui::MainWindow *ui;
     QLabel *label_MapRulerStatus = nullptr;

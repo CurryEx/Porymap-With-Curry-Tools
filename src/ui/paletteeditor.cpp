@@ -326,3 +326,57 @@ void PaletteEditor::closeEvent(QCloseEvent*) {
         this->saveState()
     );
 }
+
+void PaletteEditor::on_actionImport_new_palette_triggered()
+{
+
+    QString filepath = QFileDialog::getOpenFileName(
+            this,
+            QString("导入新版PS色板"),
+            this->project->root,
+            "色板文件 (*.pal)");
+    if (filepath.isEmpty()) {
+        return;
+    }
+
+    QMessageBox msgBox(this);
+    msgBox.setText("失败");
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Critical);
+
+    bool error = false;
+    QList<QRgb> palette = PaletteUtil::parse(filepath, &error);
+    if (error)
+    {
+        msgBox.setInformativeText("调色板加载失败");
+        msgBox.exec();
+        return;
+    }
+
+    if (palette.length() != 22) {
+        QString message = QString("色斑长度不正确 请确认是新版ps导出的16色色板(应有22长度) 当前文件长度 %1").arg(palette.length());
+        msgBox.setInformativeText(message);
+        msgBox.exec();
+        return;
+    }
+
+    int paletteId = this->ui->spinBox_PaletteId->value();
+    for (int i = 0; i < 16; i++) {
+        if (paletteId < Project::getNumPalettesPrimary())
+        {
+            this->primaryTileset->palettes[paletteId][i] = palette.at(i+6);
+            this->primaryTileset->palettePreviews[paletteId][i] = palette.at(i+6);
+        }
+        else
+        {
+            this->secondaryTileset->palettes[paletteId][i] = palette.at(i+6);
+            this->secondaryTileset->palettePreviews[paletteId][i] = palette.at(i+6);
+        }
+    }
+
+    this->refreshColorSliders();
+    this->refreshColors();
+    this->commitEditHistory(paletteId);
+    emit this->changedPaletteColor();
+}
+
