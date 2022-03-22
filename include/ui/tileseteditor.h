@@ -108,10 +108,15 @@ private slots:
 
     void on_actionImportImageToMetatileReferToTiles_triggered();
 
-
     void on_actionExpandPrimaryTile_triggered();
 
     void on_actionExpandSecondaryTile_triggered();
+
+    void on_actionExportPrimaryMetatilesToAM_triggered();
+
+    void on_actionExportSecondaryMetatilesToAM_triggered();
+
+    void on_actionExportCurrentPalttle_triggered();
 
 private:
     void initUi();
@@ -149,6 +154,7 @@ private:
     static MatchResult matchImage(const QImage& image1, const QImage& image2, bool allowFlip);
     QList<Tile> matchTile(const QImage& image);
     void expandTiles(bool isPrimary);
+    void exportMetatilesToAM(bool isPrimary);
 
     Ui::TilesetEditor *ui;
     History<MetatileHistoryItem*> metatileHistory;

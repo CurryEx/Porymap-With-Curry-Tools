@@ -3212,3 +3212,21 @@ void MainWindow::on_actionImportToMap_triggered()
 {
     this->editor->on_actionImportToMap_triggered();
 }
+
+void MainWindow::on_actionExportMapToAM_triggered()
+{
+    //警告框
+    QMessageBox msgBox(nullptr);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Critical);
+    msgBox.setText("失败");
+
+    if (projectHasUnsavedChanges || (editor->map && editor->map->hasUnsavedChanges()))
+    {
+            msgBox.setInformativeText("当前变更没有保存，请先保存。");
+            msgBox.exec();
+            return;
+    }
+    else
+        this->editor->on_actionExportMapToAM_triggered();
+}

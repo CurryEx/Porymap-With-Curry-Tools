@@ -1225,8 +1225,8 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
     bool primary = selectedTileId < this->primaryTileset->tiles.count();
 
     //todo 不清楚t0是否一定会是项目设定的数量 检测到不相等就跳出
-    if(!primary)
-        if(Project::getNumTilesPrimary()!=this->primaryTileset->tiles.count())
+    if (!primary)
+        if (Project::getNumTilesPrimary() != this->primaryTileset->tiles.count())
         {
             msgBox.setInformativeText(QString("发现当前PrimaryTiles数量为 %1 并非项目设定的数量 %2 ，若要使用secondary tiles请先扩充到 %3")
                                               .arg(this->primaryTileset->tiles.count())
@@ -1288,7 +1288,7 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
             "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
             "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
             "喝杯Java 耐心等待");
-    compressProgress->setRange(0, (image.width()/8) * (image.height()/8));
+    compressProgress->setRange(0, (image.width() / 8) * (image.height() / 8));
 
     //压缩
     QList<QImage> tilesImage;
@@ -1304,7 +1304,7 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
             matched = false;
             for (int i = 0; i < tilesImage.count(); i++)
             {
-                compressProgress->setValue(y*image.width()+x);
+                compressProgress->setValue(y * image.width() + x);
                 QApplication::processEvents();
                 if (matchImage(tile, tilesImage.at(i), true) != MatchResult::NOT_MATCH)
                 {
@@ -1544,8 +1544,8 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
                           primaryMetatileCount - selectedMetatileId :
                           secondaryMetatileCount - (selectedMetatileId - primaryMetatileCount);
 
-    if(!primary)
-        if(Project::getNumMetatilesPrimary()!=this->primaryTileset->metatiles.count())
+    if (!primary)
+        if (Project::getNumMetatilesPrimary() != this->primaryTileset->metatiles.count())
         {
             msgBox.setInformativeText(QString("发现当前PrimaryMetatiles数量为 %1 并非项目设定的数量 %2 ，若要使用secondary metatile请先扩充到 %3")
                                               .arg(this->primaryTileset->metatiles.count())
@@ -1606,7 +1606,6 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
     }
 
 
-
     logInfo(QString("primaryMetatileCount %1 secondaryMetatileCount %2 this->currentSelectId %3 maxAllowedTiles %4")
                     .arg(primaryMetatileCount)
                     .arg(secondaryMetatileCount)
@@ -1650,7 +1649,7 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
     for (int y = 0; y < image.height(); y += h)
         for (int x = 0; x < image.width(); x += w)
         {
-            compressProgress->setValue(x+y*image.height());
+            compressProgress->setValue(x + y * image.height());
             //截取出来
             QImage tile = image.copy(x, y, w, h);
             matched = false;
@@ -1780,12 +1779,14 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
         int encounterType = this->ui->comboBox_encounterType->currentIndex();
         int terrainType = this->ui->comboBox_terrainType->currentIndex();
         int behavior = this->ui->comboBox_metatileBehaviors->currentIndex();
-        auto* selectedMetatile = new Metatile;
-        memccpy(selectedMetatile,Tileset::getMetatile(selectedMetatileId, this->primaryTileset, this->secondaryTileset),1,sizeof Metatile());
+        auto *selectedMetatile = new Metatile;
+        memccpy(selectedMetatile,
+                Tileset::getMetatile(selectedMetatileId, this->primaryTileset, this->secondaryTileset), 1,
+                sizeof Metatile());
 
         //保存是否已经被映射到metatileId
         bool sequenceFixedFlag[sequence.count()];
-        for(int i=0;i<sequence.count();i++)
+        for (int i = 0; i < sequence.count(); i++)
             sequenceFixedFlag[i] = false;
         //正式插入
         int nowY = 0;
@@ -1803,10 +1804,10 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
 
             //计算json中正确的对应关系
             //对于每个压缩对应项
-            for(int jsonArrIndex=0;jsonArrIndex<sequence.count();jsonArrIndex++)
+            for (int jsonArrIndex = 0; jsonArrIndex < sequence.count(); jsonArrIndex++)
             {
                 //如果压缩对应项和当前index相同
-                if(sequence.at(jsonArrIndex).toInt()==nowIndex && !sequenceFixedFlag[jsonArrIndex])
+                if (sequence.at(jsonArrIndex).toInt() == nowIndex && !sequenceFixedFlag[jsonArrIndex])
                 {
                     //表示处理过
                     sequenceFixedFlag[jsonArrIndex] = true;
@@ -1881,13 +1882,13 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
     jsonObject["height"] = numTilesHigh;
     QJsonDocument jsonDoc;
     jsonDoc.setObject(jsonObject);
-    QFile* jsonFile;
+    QFile *jsonFile;
     if (!jsonFilePath.isEmpty())
         jsonFile = new QFile(jsonFilePath);
     else
         jsonFile = new QFile(defaultPath);
 
-    if(!jsonFile->open(QIODevice::ReadWrite))
+    if (!jsonFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
         msgBox.setInformativeText(QString("选择的保存位置打开失败"));
         msgBox.exec();
@@ -1921,7 +1922,7 @@ QList<Tile> TilesetEditor::matchTile(const QImage &image)
                         {8, 8}};
 
     //对一个metatile的四块
-    for (auto & offsetIdx : offset)
+    for (auto &offsetIdx: offset)
     {
         //计算出当前应比对的左上角的坐标
         int x = offsetIdx[0];
@@ -1933,7 +1934,7 @@ QList<Tile> TilesetEditor::matchTile(const QImage &image)
         //遍历所有右图tile 对比每一个tile与slice
         bool matched = true;
         for (int i = 0;
-             i < this->primaryTileset->tiles.count()+this->secondaryTileset->tiles.count();
+             i < this->primaryTileset->tiles.count() + this->secondaryTileset->tiles.count();
              i++)
         {
 //            logInfo(QString("now comparring %1")
@@ -1941,31 +1942,31 @@ QList<Tile> TilesetEditor::matchTile(const QImage &image)
 //            );
             QImage tile = getPalettedTileImage(i, this->primaryTileset, this->secondaryTileset, currentPaletteId, true);
 
-            auto result = matchImage(imageSlice,tile,true);
-            if(result==MatchResult::NOT_MATCH)
+            auto result = matchImage(imageSlice, tile, true);
+            if (result == MatchResult::NOT_MATCH)
             {
                 matched = false;
                 continue;
             }
-            else if(result==MatchResult::MATCH)
+            else if (result == MatchResult::MATCH)
             {
                 matched = true;
                 ret.append(Tile(i, false, false, paletteId));
                 break;
             }
-            else if(result==MatchResult::X_FLIP)
+            else if (result == MatchResult::X_FLIP)
             {
                 matched = true;
                 ret.append(Tile(i, true, false, paletteId));
                 break;
             }
-            else if(result==MatchResult::Y_FLIP)
+            else if (result == MatchResult::Y_FLIP)
             {
                 matched = true;
                 ret.append(Tile(i, false, true, paletteId));
                 break;
             }
-            else if(result==MatchResult::XY_FLIP)
+            else if (result == MatchResult::XY_FLIP)
             {
                 matched = true;
                 ret.append(Tile(i, true, true, paletteId));
@@ -1973,7 +1974,7 @@ QList<Tile> TilesetEditor::matchTile(const QImage &image)
             }
         }
         //遍历完所有的tile都找不到这一块则失败
-        if(!matched)
+        if (!matched)
         {
             return {};
         }
@@ -2002,8 +2003,8 @@ void TilesetEditor::on_actionExpandSecondaryTile_triggered()
 
 void TilesetEditor::expandTiles(bool isPrimary)
 {
-    int count,max;
-    if(isPrimary)
+    int count, max;
+    if (isPrimary)
     {
         count = this->primaryTileset->tiles.count();
         max = Project::getNumTilesPrimary();
@@ -2027,9 +2028,9 @@ void TilesetEditor::expandTiles(bool isPrimary)
     QSBHeight->setMinimum(count);
     QSBHeight->setMaximum(max);
     form.addRow(new QLabel(QString(" %1 Tiles 共有 %2 块，要扩充到多少块？输入的值必须大于当前值、小于等于 %3 、并是16的倍数")
-    .arg(isPrimary?"Primary":"Secondary")
-    .arg(count)
-    .arg(max)));
+                                   .arg(isPrimary ? "Primary" : "Secondary")
+                                   .arg(count)
+                                   .arg(max)));
     form.addRow(new QLabel("扩充到大小"), QSBHeight);
 
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
@@ -2041,20 +2042,19 @@ void TilesetEditor::expandTiles(bool isPrimary)
     if (dialog.exec() == QDialog::Accepted)
     {
         int expandTo = QSBHeight->value();
-        if(expandTo%16!=0 || expandTo>max || expandTo<=count)
+        if (expandTo % 16 != 0 || expandTo > max || expandTo <= count)
         {
             msgBox.setText("失败");
             msgBox.setInformativeText(QString("输入的值必须大于当前值、小于等于 %1 、并是16的倍数")
                                               .arg(max));
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            msgBox.setIcon(QMessageBox::Icon::Critical);
             msgBox.exec();
+            return;
         }
 
-        if(isPrimary)
+        if (isPrimary)
         {
-            QImage lastTile = this->primaryTileset->tiles.at(this->primaryTileset->tiles.count()-1);
-            for(int i=0;i<expandTo-count;i++)
+            QImage lastTile = this->primaryTileset->tiles.at(this->primaryTileset->tiles.count() - 1);
+            for (int i = 0; i < expandTo - count; i++)
             {
                 this->primaryTileset->tiles.append(lastTile);
             }
@@ -2062,8 +2062,8 @@ void TilesetEditor::expandTiles(bool isPrimary)
         }
         else
         {
-            QImage lastTile = this->secondaryTileset->tiles.at(this->secondaryTileset->tiles.count()-1);
-            for(int i=0;i<expandTo-count;i++)
+            QImage lastTile = this->secondaryTileset->tiles.at(this->secondaryTileset->tiles.count() - 1);
+            for (int i = 0; i < expandTo - count; i++)
             {
                 this->secondaryTileset->tiles.append(lastTile);
             }
@@ -2072,5 +2072,205 @@ void TilesetEditor::expandTiles(bool isPrimary)
         this->refresh();
         this->hasUnsavedChanges = true;
     }
+}
+
+
+void TilesetEditor::on_actionExportPrimaryMetatilesToAM_triggered()
+{
+    exportMetatilesToAM(true);
+}
+
+
+void TilesetEditor::on_actionExportSecondaryMetatilesToAM_triggered()
+{
+    exportMetatilesToAM(false);
+}
+
+
+void TilesetEditor::exportMetatilesToAM(bool isPrimary)
+{
+    //警告框
+    QMessageBox msgBox(this);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Critical);
+    msgBox.setText("失败");
+
+    //未保存
+    if (this->hasUnsavedChanges)
+    {
+        msgBox.setInformativeText("当前变更没有保存，请先保存。");
+        msgBox.exec();
+        return;
+    }
+
+    //打开文件
+    QString filepath = QFileDialog::getSaveFileName(this, "导出AM格式地图块",
+                                                    this->project->root,
+                                                    "AM地图块文件 (*)");
+    if (filepath.isEmpty())
+        return;
+
+    //bvd文件
+    auto bvdFile = new QFile(filepath+".bvd");
+    if (!bvdFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+        msgBox.setInformativeText(QString("bvd文件保存失败"));
+        msgBox.exec();
+        return;
+    }
+
+    //计算选定t0t1相关信息
+    int metatilesCount = 0;
+    Tileset *tileset;
+
+    if (isPrimary)
+    {
+        tileset = this->primaryTileset;
+    }
+    else
+    {
+        tileset = this->secondaryTileset;
+    }
+    metatilesCount = tileset->metatiles.count();
+
+    //大小转小端
+    byte b[4];
+    b[0] = (byte) (metatilesCount & 0xff);
+    b[1] = (byte) (metatilesCount >> 8 & 0xff);
+    b[2] = (byte) (metatilesCount >> 16 & 0xff);
+    b[3] = (byte) (metatilesCount >> 24 & 0xff);
+
+    //元数据数组
+    QByteArray data;
+
+    //大小
+    data.append(static_cast<char>(b[0]));
+    data.append(static_cast<char>(b[1]));
+    data.append(static_cast<char>(b[2]));
+    data.append(static_cast<char>(b[3]));
+
+    //metatile部分
+    for (auto each: tileset->metatiles)
+    {
+        int numTiles = projectConfig.getTripleLayerMetatilesEnabled() ? 12 : 8;
+        for (int i = 0; i < numTiles; i++)
+        {
+            uint16_t tile = each->tiles.at(i).rawValue();
+            data.append(static_cast<char>(tile));
+            data.append(static_cast<char>(tile >> 8));
+        }
+    }
+
+    //tiles部分
+    BaseGameVersion version = projectConfig.getBaseGameVersion();
+    int attrSize = Metatile::getAttributesSize(version);
+    for (auto each: tileset->metatiles)
+    {
+        uint32_t attributes = each->getAttributes(version);
+        for (int i = 0; i < attrSize; i++)
+            data.append(static_cast<char>(attributes >> (8 * i)));
+    }
+
+    //固定文件尾
+    switch (projectConfig.getBaseGameVersion())
+    {
+        case pokeruby:
+        case pokeemerald:
+            data.append(static_cast<char>('\x52'));
+            data.append(static_cast<char>('\x53'));
+            data.append(static_cast<char>('\x45'));
+            data.append(static_cast<char>('\x20'));
+            break;
+        default:
+        case pokefirered:
+            data.append(static_cast<char>('\x46'));
+            data.append(static_cast<char>('\x52'));
+            data.append(static_cast<char>('\x4c'));
+            data.append(static_cast<char>('\x47'));
+            break;
+    }
+
+    //写入
+    bvdFile->write(data);
+    bvdFile->close();
+
+    //色板文件
+    data.clear();
+    auto palFile = new QFile(filepath+".pal");
+    if (!palFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+        msgBox.setInformativeText(QString("调色板文件保存失败"));
+        msgBox.exec();
+    }
+    for (auto each : this->primaryTileset->palettes.at(this->paletteId))
+    {
+        QColor color = QColor(each);
+        data.append(static_cast<char>(color.red()));
+        data.append(static_cast<char>(color.green()));
+        data.append(static_cast<char>(color.blue()));
+        data.append(static_cast<char>('\x00'));
+    }
+    palFile->write(data);
+    palFile->close();
+
+    //dib文件
+    auto dibFile = new QFile(filepath+".dib");
+    if (!dibFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+        msgBox.setInformativeText(QString("图片文件保存失败"));
+        msgBox.exec();
+    }
+    QImage image = this->tileSelector->buildPrimaryTilesIndexedImage();
+    image = image.convertToFormat(QImage::Format_RGB888);
+    image.save(dibFile,"BMP");
+    dibFile->close();
+
+    //完成
+    msgBox.setText("恭喜");
+    msgBox.setInformativeText(QString("保存成功"));
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Information);
+    msgBox.exec();
+
+}
+void TilesetEditor::on_actionExportCurrentPalttle_triggered()
+{    //警告框
+    QMessageBox msgBox(this);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Critical);
+    msgBox.setText("失败");
+
+    //打开文件
+    QString filepath = QFileDialog::getSaveFileName(this, "导出当前调色板",
+                                                    this->project->root,
+                                                    "调色板文件 (*.pal)");
+    if (filepath.isEmpty())
+        return;
+    auto palFile = new QFile(filepath);
+    if (!palFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+        msgBox.setInformativeText(QString("调色板文件保存失败"));
+        msgBox.exec();
+    }
+
+    //元数据数组
+    QByteArray data;
+    for (auto each : this->primaryTileset->palettes.at(this->paletteId))
+    {
+        QColor color = QColor(each);
+        data.append(static_cast<char>(color.red()));
+        data.append(static_cast<char>(color.green()));
+        data.append(static_cast<char>(color.blue()));
+        data.append(static_cast<char>('\x00'));
+    }
+    palFile->write(data);
+    palFile->close();
+
+    //完成
+    msgBox.setText("恭喜");
+    msgBox.setInformativeText(QString("保存成功"));
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Information);
+    msgBox.exec();
 }
 

@@ -549,8 +549,13 @@
     </property>
     <addaction name="actionImportImageToTiles"/>
     <addaction name="actionImportImageToMetatileReferToTiles"/>
+    <addaction name="separator"/>
     <addaction name="actionExpandPrimaryTile"/>
     <addaction name="actionExpandSecondaryTile"/>
+    <addaction name="separator"/>
+    <addaction name="actionExportPrimaryMetatilesToAM"/>
+    <addaction name="actionExportSecondaryMetatilesToAM"/>
+    <addaction name="actionExportCurrentPalttle"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -669,6 +674,21 @@
   <action name="actionExpandSecondaryTile">
    <property name="text">
     <string>扩充SecondaryTiles</string>
+   </property>
+  </action>
+  <action name="actionExportPrimaryMetatilesToAM">
+   <property name="text">
+    <string>导出AM格式的Primary地图块</string>
+   </property>
+  </action>
+  <action name="actionExportSecondaryMetatilesToAM">
+   <property name="text">
+    <string>导出AM格式的Secondary地图块</string>
+   </property>
+  </action>
+  <action name="actionExportCurrentPalttle">
+   <property name="text">
+    <string>导出当前调色板</string>
    </property>
   </action>
  </widget>

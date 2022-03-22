@@ -107,6 +107,8 @@ public:
 
     //@Curry
     void on_actionImportToMap_triggered() const;
+    void on_actionExportMapToAM_triggered();
+
 
     QGraphicsScene *scene = nullptr;
     QGraphicsPixmapItem *current_view = nullptr;

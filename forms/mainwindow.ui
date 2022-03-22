@@ -2638,6 +2638,7 @@
      <string>咖喱的小工具</string>
     </property>
     <addaction name="actionImportToMap"/>
+    <addaction name="actionExportMapToAM"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -2946,6 +2947,11 @@
   <action name="actionCTilesetEditor">
    <property name="text">
     <string>CTilesetEditor</string>
+   </property>
+  </action>
+  <action name="actionExportMapToAM">
+   <property name="text">
+    <string>导出AM1.92地图</string>
    </property>
   </action>
  </widget>

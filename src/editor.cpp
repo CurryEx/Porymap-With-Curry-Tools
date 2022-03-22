@@ -2207,7 +2207,7 @@ void Editor::on_actionImportToMap_triggered() const
         return;
     }
     QFile file(filepath);
-    if(!file.open(QIODevice::ReadWrite))
+    if(!file.open(QIODevice::ReadOnly))
     {
         msgBox.setInformativeText(QString("文件打开失败"));
         msgBox.exec();
@@ -2296,6 +2296,179 @@ void Editor::on_actionImportToMap_triggered() const
         this->map_item->draw(true);
         ui->graphicsView_Map->scene()->update();
         progressDialog->close();
+        map->hasUnsavedDataChanges = true;
     }
+}
+
+
+void Editor::on_actionExportMapToAM_triggered()
+{
+    //警告框
+    QMessageBox msgBox(nullptr);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Critical);
+    msgBox.setText("失败");
+
+    if(2!=this->map->getBorderWidth() || 2!=this->map->getBorderHeight())
+    {
+        msgBox.setInformativeText(QString("由于AM设计缺陷，边缘地图快只能设置为2x2，请先修改。"));
+        msgBox.exec();
+        return;
+    }
+
+    //打开文件
+    QString filepath = QFileDialog::getSaveFileName(nullptr,
+                                                    "导出AM格式地图块",
+                                                    this->project->root,
+                                                    "AM地图文件 (*.map)");
+    if (filepath.isEmpty())
+        return;
+
+    //map文件
+    auto mapFile = new QFile(filepath);
+    if (!mapFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+        msgBox.setInformativeText(QString("map文件保存失败"));
+        msgBox.exec();
+        return;
+    }
+    //元数据数组
+    QByteArray data;
+
+    //计算 转为小端 塞入
+    int num = 0;
+
+    //宽0-3
+    num = this->map->getWidth();
+    byte b[4];
+    b[0] = (byte) (num & 0xff);
+    b[1] = (byte) (num >> 8 & 0xff);
+    b[2] = (byte) (num >> 16 & 0xff);
+    b[3] = (byte) (num >> 24 & 0xff);
+    data.append(static_cast<char>(b[0]));
+    data.append(static_cast<char>(b[1]));
+    data.append(static_cast<char>(b[2]));
+    data.append(static_cast<char>(b[3]));
+
+    //高4-7
+    num = this->map->getHeight();
+    b[0] = (byte) (num & 0xff);
+    b[1] = (byte) (num >> 8 & 0xff);
+    b[2] = (byte) (num >> 16 & 0xff);
+    b[3] = (byte) (num >> 24 & 0xff);
+    data.append(static_cast<char>(b[0]));
+    data.append(static_cast<char>(b[1]));
+    data.append(static_cast<char>(b[2]));
+    data.append(static_cast<char>(b[3]));
+
+    //参数输入框
+    QDialog dialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+    dialog.setWindowTitle("要使用的地图块编号");
+    dialog.setWindowModality(Qt::NonModal);
+
+    QFormLayout form(&dialog);
+
+    auto *QSBt0 = new QSpinBox();
+    auto *QSBt1 = new QSpinBox();
+    QSBt0->setMinimum(0);
+    QSBt1->setMinimum(0);
+    QSBt0->setMaximum(254);
+    QSBt1->setMaximum(254);
+    form.addRow(new QLabel("输入要使用的地图块编号，对应AM中的'使用的tilesets'"));
+    form.addRow(new QLabel("Tileset 1"), QSBt0);
+    form.addRow(new QLabel("Tileset 2"), QSBt1);
+
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
+    connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    form.addRow(&buttonBox);
+
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        //t0 8-11
+        num = QSBt0->value();
+        b[0] = (byte) (num & 0xff);
+        b[1] = (byte) (num >> 8 & 0xff);
+        b[2] = (byte) (num >> 16 & 0xff);
+        b[3] = (byte) (num >> 24 & 0xff);
+        data.append(static_cast<char>(b[0]));
+        data.append(static_cast<char>(b[1]));
+        data.append(static_cast<char>(b[2]));
+        data.append(static_cast<char>(b[3]));
+
+        //t1 12-15
+        num = QSBt1->value();
+        b[0] = (byte) (num & 0xff);
+        b[1] = (byte) (num >> 8 & 0xff);
+        b[2] = (byte) (num >> 16 & 0xff);
+        b[3] = (byte) (num >> 24 & 0xff);
+        data.append(static_cast<char>(b[0]));
+        data.append(static_cast<char>(b[1]));
+        data.append(static_cast<char>(b[2]));
+        data.append(static_cast<char>(b[3]));
+    }
+
+    //固定文件尾
+    switch (projectConfig.getBaseGameVersion())
+    {
+        case pokeruby:
+        case pokeemerald:
+            //宝石边框宽高 16-17
+            data.append(static_cast<char>('\x00'));
+            data.append(static_cast<char>('\x00'));
+            break;
+        default:
+        case pokefirered:
+            //火叶边框高度 16-17
+            data.append(static_cast<char>('\x02'));
+            data.append(static_cast<char>('\x02'));
+            break;
+    }
+
+    //固定文件尾 18-19
+    data.append(static_cast<char>('\xc0'));
+    data.append(static_cast<char>('\x00'));
+
+    //边框文件
+    if(projectConfig.getBaseGameVersion()==pokeruby||projectConfig.getBaseGameVersion()==pokeemerald)
+    {
+
+    }
+    else
+    {
+        auto borderFile = new QFile(this->project->root+"/"+this->map->layout->border_path);
+        if (!borderFile->open(QIODevice::ReadOnly))
+        {
+            msgBox.setInformativeText(QString("border文件无法打开，检查porymap状态"));
+            msgBox.exec();
+            return;
+        }
+        QByteArray borderData = borderFile->readAll();
+        data.append(borderData);
+        borderFile->close();
+    }
+
+    //地图块文件
+    auto blockFile = new QFile(this->project->root+"/"+this->map->layout->blockdata_path);
+    if (!blockFile->open(QIODevice::ReadOnly))
+    {
+        msgBox.setInformativeText(QString("block文件无法打开，检查porymap状态"));
+        msgBox.exec();
+        return;
+    }
+    QByteArray blockData = blockFile->readAll();
+    data.append(blockData);
+    blockFile->close();
+
+    //写入
+    mapFile->write(data);
+    mapFile->close();
+
+    //完成
+    msgBox.setText("恭喜");
+    msgBox.setInformativeText(QString("保存成功"));
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Icon::Information);
+    msgBox.exec();
 }
 
