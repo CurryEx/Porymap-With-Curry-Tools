@@ -1,4 +1,4 @@
-## @Curry 该版本在正式发布前仅供内部使用 
+author: @Curry
 
 > fork from https://github.com/huderlem/porymap 4.5.0
 
