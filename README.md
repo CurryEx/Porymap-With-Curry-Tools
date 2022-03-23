@@ -95,16 +95,16 @@
 
 However, many hack groups still use the way of functions hook, such as CFRU, to edit a ROM, even modify ROM directly. Generally, we use AdvanceMap to modify maps, which is a little outdated. Benefit from the excellent bases of Porymap, I coded some very useful tools for Porymap. Now, on one hand, you can modify maps in Porymap and export your map to AdvanceMap formats, on the other hand, you can edit your maps in decompilation projects with more functional tools. 
 
-**Thank you so much for your accessing**, I coded this project in my spare time, maybe there are some bugs.
+**Thank you so much for your access**, I coded this project in my spare time, maybe there are some bugs.
 
 Please excuse my poor coding and English writing.
 
-Apology to **not translate labels in program now**, due to not all of my group members could read English. I will learn to add mutil-languages labels in this project in spare time.
+**Apology for not translating labels in the program now**, due to not all of my group members could read English. I will learn to add multi-languages labels in this project in my spare time.
 
 
 ## 2. What's new
 
-> **The left image in Tileset Editor is named Metatile, the right one is Tile**
+> **Def: The left image in Tileset Editor is named Metatile, the right one is Tile**
 
 > tools 1-5 found in `Tileset Tditor-Curry Tools(咖喱的小工具)`
 > ![Tool1-5](MDResources/tool1-5.png)
@@ -113,12 +113,12 @@ Apology to **not translate labels in program now**, due to not all of my group m
 
    ![import tile](MDResources/导入tile.gif)
 
-   - **this function will start with current selected Tile**
+   - **this function will start with the current selected Tile**
 
    select and compress an indexed image, must be 16 colors, and import to Tiles. You need to set:
-   - width (预期宽度)：the width of compressed image in Tiles
-   - skip x Tiles (跳过x块后插入)：after current selected Tile, skip x Tiles first and import. This function is use for not waste any row. Parameters:
-   - allow empty (是否允许插入空块)：the blank blocks in image will be ignored
+   - width (预期宽度)：the width of the compressed image in Tiles
+   - skip x Tiles (跳过x块后插入)：after current selected Tile, skip x Tiles first and import. This function is used to not waste any row.
+   - allow empty (是否允许插入空块)：the blank blocks in the image will be ignored Parameters:
 
 
 2. Generate Metatiles by image and Tiles (根据Tiles生成图片到Metatile)
@@ -127,19 +127,19 @@ Apology to **not translate labels in program now**, due to not all of my group m
 
    ![import json](MDResources/导入json.gif)
 
-   - **this function will start with current selected Metatile**
+   - **this function will start with the current selected Metatile**
 
-   - **any imported blocks will use current selected Metatile's attribute, include bottom tiles, layer type, behavior...**
+   - **any imported blocks will use the current selected Metatile's attribute, include bottom tiles, layer type, behavior...**
 
-   auto generate Metatiles with selected image(generally the same as tool 1), palette, and tiles. After finishing, there is a Json file will be created, it is record the corresponding relationship with image and Metatiles. Using the Json file in `main window-Curry tools(咖喱的小工具)-Import Json to map(导入Json到地图)`. Parameters:
-   - width (预期宽度)：the width of compressed image in Metatiles
+   auto generate Metatiles with selected image(generally the same as tool 1), palette, and tiles. After finishing, there is a Json file will be created, it record the corresponding relationship with the image and Metatiles. Using the Json file in `main window-Curry tools(咖喱的小工具)-Import Json to map(导入Json到地图)`. Parameters:
+   - width (预期宽度)：the width of the compressed image in Metatiles
    - skip x Tiles (跳过x块后插入)：after current selected Tile, skip x Tiles first and import. This function is use for not waste any row
-   - allow empty (是否允许插入空块)：the blank blocks in image will be ignored
+   - allow empty (是否允许插入空块)：the blank blocks in the image will be ignored
 
 
 3. Expand tiles (扩充***Tiles)
 
-   expand Primary or Secondary Tiles。Parameter:
+   expand Primary or Secondary Tiles. Parameter:
    - nums (扩充到大小)：The num you want to expand to. Input should greater than current, less than max, divided by 16
 
 
