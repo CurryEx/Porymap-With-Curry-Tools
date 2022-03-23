@@ -155,6 +155,16 @@ private:
     QList<Tile> matchTile(const QImage& image);
     void expandTiles(bool isPrimary);
     void exportMetatilesToAM(bool isPrimary);
+    QList<QImage> compressImage(const QImage& image, bool allowFlip, int widthPerBlock, int heightPerBlock, /*NULLABLE*/QJsonArray* outputSequence);
+    class DialogResult{
+    public:
+        bool isAccept = false;
+        bool allowEmpty = false;
+        int width;
+        int right;
+    };
+    DialogResult createParametersDialog(bool isMetatile, int selectedId, const QList<QImage>& compressedImageList);
+    bool isGBAEmptyImage(const QImage& image);
 
     Ui::TilesetEditor *ui;
     History<MetatileHistoryItem*> metatileHistory;

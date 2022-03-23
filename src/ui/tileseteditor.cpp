@@ -1278,155 +1278,123 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
         return;
     }
 
-    //生成进度条窗口
-    auto *compressProgress = new QProgressDialog(this);
-    compressProgress->setWindowModality(Qt::WindowModal);
-    compressProgress->setMinimumDuration(0);
-    compressProgress->setCancelButton(nullptr);
-    compressProgress->setWindowTitle(tr("请稍等"));
-    compressProgress->setLabelText(
-            "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
-            "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
-            "喝杯Java 耐心等待");
-    compressProgress->setRange(0, (image.width() / 8) * (image.height() / 8));
-
     //压缩
-    QList<QImage> tilesImage;
-    //初始化第一个tile
-    tilesImage.append(image.copy(0, 0, 8, 8));
-    int w = 8;
-    int h = 8;
-    bool matched;
-    for (int y = 0; y < image.height(); y += h)
-        for (int x = 0; x < image.width(); x += w)
-        {
-            QImage tile = image.copy(x, y, w, h);
-            matched = false;
-            for (int i = 0; i < tilesImage.count(); i++)
-            {
-                compressProgress->setValue(y * image.width() + x);
-                QApplication::processEvents();
-                if (matchImage(tile, tilesImage.at(i), true) != MatchResult::NOT_MATCH)
-                {
-                    matched = true;
-                    break;
-                }
-            }
-            if (!matched)
-                tilesImage.append(tile);
-        }
-    compressProgress->close();
+    auto compressedTiles = compressImage(image, true, 8, 8, nullptr);
 
-    //参数输入框
-    QDialog dialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-    dialog.setWindowTitle("确认");
-    dialog.setWindowModality(Qt::NonModal);
-
-    QFormLayout form(&dialog);
-    auto *QSBWidth = new QSpinBox();
-    QSBWidth->setMinimum(1);
-    QSBWidth->setMaximum(999);
-    auto *QSBHeight = new QLabel();
-    QSBHeight->setEnabled(false);
-    form.addRow(new QLabel(QString("当前选择的Tile作为插入位置、色板同理，共需要 %1 块tile，输入换行高度").arg(tilesImage.count())));
-    form.addRow(new QLabel("预期宽度"), QSBWidth);
-    form.addRow(new QLabel("将使用高度"), QSBHeight);
-    QSBHeight->setText(QString("%1").arg((int) ceil(tilesImage.count() * 1.0 / 1)));
-
-    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
-    connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-    connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-    connect(QSBWidth, QOverload<int>::of(&QSpinBox::valueChanged), [=](int value) {
-        if (selectedTileId % 16 + value > 16)
-            QSBHeight->setText(QString("宽度越界"));
-        else
-            QSBHeight->setText(QString("%1").arg((int) ceil(tilesImage.count() * 1.0 / value)));
-    });
-    form.addRow(&buttonBox);
-
-    //输入框确认
-    if (dialog.exec() == QDialog::Accepted)
+    auto result = createParametersDialog(false, selectedTileId, compressedTiles);
+    if (result.isAccept)
     {
-        int exceptWidth = QSBWidth->value();
+        int exceptWidth = result.width;
+        int right = result.right;
+        bool allowEmpty = result.allowEmpty;
 
-        //计算是否放得下
+        //计算是否宽度越界
+        if (right != 0)
+        {
+            if (right >= exceptWidth)
+            {
+                msgBox.setInformativeText(QString("宽度越界"));
+                msgBox.exec();
+                return;
+            }
+        }
         if (selectedTileId % 16 + exceptWidth > 16)
         {
             msgBox.setInformativeText(QString("宽度越界"));
             msgBox.exec();
             return;
         }
+
+        //计算是否容纳得下
+        int selectedHeight;
+        QList<QImage>* targetTiles;
         if (primary)
         {
-            //允许高度等于总高度减去当前高度
-            int selectedHeight = (selectedTileId - (selectedTileId % 16)) / 16;
-            int allowHeight = (this->primaryTileset->tiles.count() / 16) - selectedHeight;
-
-            if (exceptWidth * allowHeight < tilesImage.count())
-            {
-                msgBox.setInformativeText(QString("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
-                                                  .arg(exceptWidth * allowHeight)
-                                                  .arg(tilesImage.count()));
-                msgBox.exec();
-                return;
-            }
-            //插入
-            int offset = 0;
-            int nowY = 0;
-            for (int i = 0; i < tilesImage.count(); i++)
-            {
-                int nowProcess = selectedTileId + i + offset;
-                if (++nowY == exceptWidth)
-                {
-                    nowY = 0;
-                    offset = offset + 16 - exceptWidth;
-                }
-                this->primaryTileset->tiles.replace(nowProcess, tilesImage.at(i));
-            }
-            this->primaryTileset->tilesImage = this->tileSelector->buildPrimaryTilesIndexedImage();
+            targetTiles = &this->primaryTileset->tiles;
         }
         else
         {
-            //允许高度等于总高度减去当前高度
             selectedTileId -= this->primaryTileset->tiles.count();
-            int selectedHeight = (selectedTileId - (selectedTileId % 16)) / 16;
-            int allowHeight = (this->secondaryTileset->tiles.count() / 16) - selectedHeight;
-
-            if (exceptWidth * allowHeight < tilesImage.count())
-            {
-                msgBox.setInformativeText(QString("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
-                                                  .arg(exceptWidth * allowHeight)
-                                                  .arg(tilesImage.count()));
-                msgBox.exec();
-                return;
-            }
-            int offset = 0;
-            int nowY = 0;
-            for (int i = 0; i < tilesImage.count(); i++)
-            {
-                int nowProcess = selectedTileId + i + offset;
-                if (++nowY == exceptWidth)
-                {
-                    nowY = 0;
-                    offset = offset + 16 - exceptWidth;
-                }
-                this->secondaryTileset->tiles.replace(nowProcess, tilesImage.at(i));
-            }
-            this->secondaryTileset->tilesImage = this->tileSelector->buildSecondaryTilesIndexedImage();
+            targetTiles = &this->secondaryTileset->tiles;
         }
+
+        //允许高度等于总高度减去当前高度
+        selectedHeight = (selectedTileId - (selectedTileId % 16)) / 16;
+        int allowHeight = (targetTiles->count() / 16) - selectedHeight;
+
+        //需要把刚刚计算出来的高度减去设置的right得到真正的空位
+        int allowBlock;
+        if (right != 0)
+            allowBlock = exceptWidth * allowHeight - right;
+        else
+            allowBlock = exceptWidth * allowHeight;
+
+        if (allowBlock < compressedTiles.count())
+        {
+            msgBox.setInformativeText(QString("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
+                                              .arg(allowBlock)
+                                              .arg(compressedTiles.count()));
+            msgBox.exec();
+            return;
+        }
+
+        //生成进度条窗口
+        auto *progressDialog = new QProgressDialog(this);
+        progressDialog->setWindowModality(Qt::WindowModal);
+        progressDialog->setMinimumDuration(0);
+        progressDialog->setCancelButton(nullptr);
+        progressDialog->setWindowTitle(tr("请稍等"));
+        progressDialog->setLabelText(
+                "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
+                "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
+                "喝杯Java 耐心等待");
+        progressDialog->setRange(0, compressedTiles.count());
+
+        //正式填入 可能会卡一下
+        int offset = 0;
+        int nowY = 0;
+        if (right != 0)
+        {
+            nowY += right;
+            selectedTileId += right;
+        }
+        for (int i = 0; i < compressedTiles.count(); i++)
+        {
+            QApplication::processEvents();
+            //计算不允许空块的情况
+            if(!allowEmpty)
+            {
+                if(isGBAEmptyImage(compressedTiles.at(i)))
+                {
+                    offset--;
+                    continue;
+                }
+            }
+            progressDialog->setValue(i);
+            int nowProcess = selectedTileId + i + offset;
+            if (++nowY == exceptWidth)
+            {
+                nowY = 0;
+                offset = offset + 16 - exceptWidth;
+            }
+            targetTiles->replace(nowProcess, compressedTiles.at(i));
+        }
+
+        this->primaryTileset->tilesImage = this->tileSelector->buildPrimaryTilesIndexedImage();
+        this->secondaryTileset->tilesImage = this->tileSelector->buildSecondaryTilesIndexedImage();
         this->refresh();
         this->hasUnsavedChanges = true;
+        progressDialog->close();
     }
 }
 
 TilesetEditor::MatchResult TilesetEditor::matchImage(const QImage &image1, const QImage &image2, bool allowFlip)
 {
-    if (image1.width() != image2.width() ||
-        image1.height() != image2.height())
-        return MatchResult::NOT_MATCH;
-
     int width = image1.width();
     int height = image1.height();
+
+    if (width != image2.width() || height != image2.height())
+        return MatchResult::NOT_MATCH;
 
     bool success = true;
     //正向
@@ -1606,105 +1574,28 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
     }
 
 
-    logInfo(QString("primaryMetatileCount %1 secondaryMetatileCount %2 this->currentSelectId %3 maxAllowedTiles %4")
-                    .arg(primaryMetatileCount)
-                    .arg(secondaryMetatileCount)
-                    .arg(selectedMetatileId)
-                    .arg(maxAllowedTiles)
-    );
-
-
-    QDialog dialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-    dialog.setWindowTitle("确认");
-    dialog.setWindowModality(Qt::NonModal);
+//    logInfo(QString("primaryMetatileCount %1 secondaryMetatileCount %2 this->currentSelectId %3 maxAllowedTiles %4")
+//                    .arg(primaryMetatileCount)
+//                    .arg(secondaryMetatileCount)
+//                    .arg(selectedMetatileId)
+//                    .arg(maxAllowedTiles)
+//    );
 
     //计算图片相关信息
     int numTilesWide = image.width() / 16;
     int numTilesHigh = image.height() / 16;
     int totalTiles = numTilesHigh * numTilesWide;
 
-    //生成进度条窗口
-    auto *compressProgress = new QProgressDialog(this);
-    compressProgress->setWindowModality(Qt::WindowModal);
-    compressProgress->setMinimumDuration(0);
-    compressProgress->setCancelButton(nullptr);
-    compressProgress->setWindowTitle(tr("请稍等"));
-    compressProgress->setLabelText(
-            "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
-            "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
-            "喝杯Java 耐心等待");
-    compressProgress->setRange(0, totalTiles);
-
-    //压缩
-    QList<QImage> compressedImage;
-    //保存压缩对应关系
+    //保存图片对应关系序列
     QJsonArray sequence;
-    int nowBlock = 0;
-    //初始化第一个block
-    compressedImage.append(image.copy(0, 0, 16, 16));
-    int w = 16;
-    int h = 16;
-    bool matched;
-    //对每一块
-    for (int y = 0; y < image.height(); y += h)
-        for (int x = 0; x < image.width(); x += w)
-        {
-            compressProgress->setValue(x + y * image.height());
-            //截取出来
-            QImage tile = image.copy(x, y, w, h);
-            matched = false;
-            //对每一个已存在的块
-            for (int i = 0; i < compressedImage.count(); i++)
-            {
-                QApplication::processEvents();
-                //进行对比
-                if (matchImage(tile, compressedImage.at(i), false) != MatchResult::NOT_MATCH)
-                {
-                    //匹配上了就跳出 并记录当前是那一块 不需要再添加
-                    sequence.append(i);
-                    matched = true;
-                    break;
-                }
-            }
-            //没有匹配的就添加
-            if (!matched)
-            {
-                sequence.append(++nowBlock);
-                compressedImage.append(tile);
-            }
-        }
-    compressProgress->close();
+    //压缩
+    auto compressedMetatiles = compressImage(image, false, 16, 16, &sequence);
 
-    //插入参数设置
-    QFormLayout form(&dialog);
-    auto *QSBWidth = new QSpinBox();
-    QSBWidth->setMinimum(1);
-    QSBWidth->setMaximum(999);
-    auto *QSBHeight = new QLabel();
-    QSBHeight->setEnabled(false);
-    form.addRow(new QLabel(QString("当前选择的Metatile作为插入位置、色板同理，共需要 %1 块tile，输入换预期宽度").arg(compressedImage.count())));
-    form.addRow(new QLabel("预期宽度"), QSBWidth);
-    form.addRow(new QLabel("将使用高度"), QSBHeight);
-    QSBHeight->setText(QString("%1").arg((int) ceil(compressedImage.count() * 1.0 / 1)));
-
-    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
-    connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-    connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-    connect(QSBWidth, QOverload<int>::of(&QSpinBox::valueChanged), [=](int value) {
-        if (selectedMetatileId % 8 + value > 8)
-            QSBHeight->setText(QString("宽度越界"));
-        else
-            QSBHeight->setText(QString("%1").arg((int) ceil(compressedImage.count() * 1.0 / value)));
-    });
-
-    form.addRow(&buttonBox);
-
-    //插入前计算
-    if (dialog.exec() == QDialog::Accepted)
+    auto result = createParametersDialog(true, selectedMetatileId, compressedMetatiles);
+    if (result.isAccept)
     {
         //获取最顶层地图快
         bool isTripleLayerMetatile = projectConfig.getTripleLayerMetatilesEnabled();
-        int numTiles = isTripleLayerMetatile ? 12 : 8;
         int topTiles[4];
         if (isTripleLayerMetatile)
         {
@@ -1721,8 +1612,19 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
             topTiles[3] = 7;
         }
 
-        //计算是否放得下
-        int exceptWidth = QSBWidth->value();
+        //计算宽度是否越界
+        int exceptWidth = result.width;
+        int right = result.right;
+        bool allowEmpty = result.allowEmpty;
+        if (right != 0)
+        {
+            if (right >= exceptWidth)
+            {
+                msgBox.setInformativeText(QString("宽度越界"));
+                msgBox.exec();
+                return;
+            }
+        }
         if (selectedMetatileId % 8 + exceptWidth > 8)
         {
             msgBox.setInformativeText(QString("宽度越界"));
@@ -1730,36 +1632,38 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
             return;
         }
 
+        //计算是否容纳得下
+        int selectedHeight;
+        QList<Metatile *>* targetMetatiles;
         if (primary)
         {
             //允许高度等于总高度减去当前高度
-            int selectedHeight = (selectedMetatileId - (selectedMetatileId % 8)) / 8;
-            int allowHeight = (this->primaryTileset->metatiles.count() / 8) - selectedHeight;
-
-            if (exceptWidth * allowHeight < compressedImage.count())
-            {
-                msgBox.setInformativeText(QString("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
-                                                  .arg(exceptWidth * allowHeight)
-                                                  .arg(compressedImage.count()));
-                msgBox.exec();
-                return;
-            }
+            selectedHeight = (selectedMetatileId - (selectedMetatileId % 8)) / 8;
+            targetMetatiles = &this->primaryTileset->metatiles;
         }
         else
         {
-            //允许高度等于总高度减去当前高度
+            //允许高度等于总高度减去当前高度 这个和上面不一样 不要优化
             int selectedMetatileId_ = selectedMetatileId - this->primaryTileset->metatiles.count();
-            int selectedHeight = (selectedMetatileId_ - (selectedMetatileId_ % 8)) / 8;
-            int allowHeight = (this->secondaryTileset->metatiles.count() / 8) - selectedHeight;
+            selectedHeight = (selectedMetatileId_ - (selectedMetatileId_ % 8)) / 8;
+            targetMetatiles = &this->secondaryTileset->metatiles;
+        }
+        int allowHeight = (targetMetatiles->count() / 8) - selectedHeight;
 
-            if (exceptWidth * allowHeight < compressedImage.count())
-            {
-                msgBox.setInformativeText(QString("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
-                                                  .arg(exceptWidth * allowHeight)
-                                                  .arg(compressedImage.count()));
-                msgBox.exec();
-                return;
-            }
+        //需要把刚刚计算出来的高度减去设置的right得到真正的空位
+        int allowBlock;
+        if (right != 0)
+            allowBlock = exceptWidth * allowHeight - right;
+        else
+            allowBlock = exceptWidth * allowHeight;
+
+        if (allowBlock < compressedMetatiles.count())
+        {
+            msgBox.setInformativeText(QString("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
+                                              .arg(allowBlock)
+                                              .arg(compressedMetatiles.count()));
+            msgBox.exec();
+            return;
         }
 
         //生成进度条窗口
@@ -1772,7 +1676,7 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
                 "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
                 "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
                 "喝杯Java 耐心等待");
-        progressDialog->setRange(0, compressedImage.count());
+        progressDialog->setRange(0, compressedMetatiles.count());
 
         //获取当前选择的metatile参数
         int layerType = this->ui->comboBox_layerType->currentIndex();
@@ -1788,12 +1692,29 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
         bool sequenceFixedFlag[sequence.count()];
         for (int i = 0; i < sequence.count(); i++)
             sequenceFixedFlag[i] = false;
+
         //正式插入
         int nowY = 0;
         int offset = 0;
-        //对每一个压缩好的块
-        for (int nowIndex = 0; nowIndex < compressedImage.count(); nowIndex++)
+        if (right != 0)
         {
+            nowY += right;
+            selectedMetatileId += right;
+        }
+        //对每一个压缩好的块
+        for (int nowIndex = 0; nowIndex < compressedMetatiles.count(); nowIndex++)
+        {
+            QApplication::processEvents();
+            //计算不允许空块的情况
+            if(!allowEmpty)
+            {
+                if(isGBAEmptyImage(compressedMetatiles.at(nowIndex)))
+                {
+                    offset--;
+                    continue;
+                }
+            }
+
             //处理换行后获得正确的插入位置
             int nowProcess = selectedMetatileId + nowIndex + offset;
             if (++nowY == exceptWidth)
@@ -1824,7 +1745,6 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
             metatileToEdit->terrainType = terrainType;
             metatileToEdit->behavior = behavior;
             metatileToEdit->label = "";
-            QApplication::processEvents();
             logInfo(QString("nowIndex %1 totalTiles %2 image %3x%4 %5x%6")
                             .arg(nowIndex)
                             .arg(totalTiles)
@@ -1833,15 +1753,15 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
                             .arg(numTilesWide)
                             .arg(numTilesHigh)
             );
-            auto list = matchTile(compressedImage.at(nowIndex));
+            auto list = matchTile(compressedMetatiles.at(nowIndex));
             if (list.length() == 0)
             {
+                progressDialog->close();
                 msgBox.setInformativeText("可能原因1.原图与右图(tile)不匹配 可能修改过大小。\n"
                                           "2.调色板选择错误\n"
                                           "3.初始选定的位置不正确\n"
                                           "请检查后重试");
                 msgBox.exec();
-                progressDialog->close();
                 return;
             }
             if (isTripleLayerMetatile)
@@ -1856,7 +1776,17 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
                 metatileToEdit->tiles.replace(topTiles[i], list.at(i));
             }
 
-
+        }
+        //不允许空块的情况下 刚刚不会被替换为正确的metatileId flag为false 把他置为-1
+        if(!allowEmpty)
+        {
+            for (int i = 0; i < sequence.count(); ++i)
+            {
+                if(!sequenceFixedFlag[i])
+                {
+                    sequence.replace(i,-1);
+                }
+            }
         }
         //插入完成
         progressDialog->close();
@@ -1868,7 +1798,7 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
     msgBox.setIcon(QMessageBox::Icon::Information);
     msgBox.setInformativeText(QString("图片本来需要 %1 块 经处理被压缩至 %2 块\n\n"
                                       "将生成导入辅助文件以供自动导入地图 请选择保存位置 默认与图片相同\n\n")
-                                      .arg(totalTiles).arg(compressedImage.count()));
+                                      .arg(totalTiles).arg(compressedMetatiles.count()));
     msgBox.exec();
     msgBox.setIcon(QMessageBox::Icon::Critical);
 
@@ -2111,7 +2041,7 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
         return;
 
     //bvd文件
-    auto bvdFile = new QFile(filepath+".bvd");
+    auto bvdFile = new QFile(filepath + ".bvd");
     if (!bvdFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
         msgBox.setInformativeText(QString("bvd文件保存失败"));
@@ -2196,13 +2126,13 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
 
     //色板文件
     data.clear();
-    auto palFile = new QFile(filepath+".pal");
+    auto palFile = new QFile(filepath + ".pal");
     if (!palFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
         msgBox.setInformativeText(QString("调色板文件保存失败"));
         msgBox.exec();
     }
-    for (auto each : this->primaryTileset->palettes.at(this->paletteId))
+    for (auto each: this->primaryTileset->palettes.at(this->paletteId))
     {
         QColor color = QColor(each);
         data.append(static_cast<char>(color.red()));
@@ -2214,7 +2144,7 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     palFile->close();
 
     //dib文件
-    auto dibFile = new QFile(filepath+".dib");
+    auto dibFile = new QFile(filepath + ".dib");
     if (!dibFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
         msgBox.setInformativeText(QString("图片文件保存失败"));
@@ -2222,7 +2152,7 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     }
     QImage image = this->tileSelector->buildPrimaryTilesIndexedImage();
     image = image.convertToFormat(QImage::Format_RGB888);
-    image.save(dibFile,"BMP");
+    image.save(dibFile, "BMP");
     dibFile->close();
 
     //完成
@@ -2233,8 +2163,10 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     msgBox.exec();
 
 }
+
 void TilesetEditor::on_actionExportCurrentPalttle_triggered()
-{    //警告框
+{
+    //警告框
     QMessageBox msgBox(this);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Critical);
@@ -2255,7 +2187,7 @@ void TilesetEditor::on_actionExportCurrentPalttle_triggered()
 
     //元数据数组
     QByteArray data;
-    for (auto each : this->primaryTileset->palettes.at(this->paletteId))
+    for (auto each: this->primaryTileset->palettes.at(this->paletteId))
     {
         QColor color = QColor(each);
         data.append(static_cast<char>(color.red()));
@@ -2274,3 +2206,150 @@ void TilesetEditor::on_actionExportCurrentPalttle_triggered()
     msgBox.exec();
 }
 
+QList<QImage> TilesetEditor::compressImage(const QImage &image, bool allowFlip, int widthPerBlock, int heightPerBlock, /*NULLABLE*/QJsonArray *outputSequence)
+{
+    //计算图片相关信息
+    int numTilesWide = image.width() / widthPerBlock;
+    int numTilesHigh = image.height() / heightPerBlock;
+    int totalTiles = numTilesHigh * numTilesWide;
+
+    //生成进度条窗口
+    auto *compressProgress = new QProgressDialog(this);
+    compressProgress->setWindowModality(Qt::NonModal);
+    compressProgress->setMinimumDuration(0);
+    compressProgress->setCancelButton(nullptr);
+    compressProgress->setWindowTitle(tr("请稍等"));
+    compressProgress->setLabelText(
+            "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
+            "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
+            "喝杯Java 耐心等待");
+    compressProgress->setRange(0, totalTiles);
+    //压缩
+    QList<QImage> compressedImage;
+    //保存压缩对应关系
+    QJsonArray sequence;
+    int nowBlock = 0;
+    //初始化第一个block
+    compressedImage.append(image.copy(0, 0, widthPerBlock, heightPerBlock));
+    bool matched;
+    //对每一块
+    for (int y = 0; y < image.height(); y += heightPerBlock)
+        for (int x = 0; x < image.width(); x += widthPerBlock)
+        {
+            compressProgress->setValue(x + y * image.height());
+            //截取出来
+            QImage tile = image.copy(x, y, widthPerBlock, heightPerBlock);
+            matched = false;
+            //对每一个已存在的块
+            for (int i = 0; i < compressedImage.count(); i++)
+            {
+                QApplication::processEvents();
+                //进行对比
+                if (matchImage(tile, compressedImage.at(i), allowFlip) != MatchResult::NOT_MATCH)
+                {
+                    //匹配上了就跳出 并记录当前是那一块 不需要再添加
+                    sequence.append(i);
+                    matched = true;
+                    break;
+                }
+            }
+            //没有匹配的就添加
+            if (!matched)
+            {
+                sequence.append(++nowBlock);
+                compressedImage.append(tile);
+            }
+        }
+    compressProgress->close();
+    if (outputSequence != nullptr)
+    {
+        for(auto each:sequence)
+        {
+            outputSequence->append(each);
+        }
+    }
+    return compressedImage;
+}
+
+TilesetEditor::DialogResult TilesetEditor::createParametersDialog(bool isMetatile, int selectedId, const QList<QImage>& compressedImageList)
+{
+    int lineMax;
+    if (isMetatile)
+        lineMax = 8;
+    else
+        lineMax = 16;
+    //输入参数
+    QDialog dialog(this, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+    dialog.setWindowTitle("确认");
+    dialog.setWindowModality(Qt::NonModal);
+
+    QFormLayout form(&dialog);
+    auto *QSBWidth = new QSpinBox();
+    QSBWidth->setMinimum(1);
+    QSBWidth->setMaximum(lineMax - (selectedId % lineMax));
+    auto *QLBHeight = new QLabel();
+    QLBHeight->setEnabled(false);
+    QLBHeight->setText(QString("%1").arg((int) ceil(compressedImageList.count() * 1.0 / 1)));
+    auto *QSBRight = new QSpinBox();
+    QSBRight->setMinimum(0);
+    QSBRight->setMaximum(QSBWidth->value()-1);
+    auto *QCBAllowEmpty = new QCheckBox();
+    QCBAllowEmpty->setChecked(true);
+    form.addRow(new QLabel(QString("当前选择的位置作为开始位置，共需要 %1 块tile，输入相关参数").arg(compressedImageList.count())));
+    form.addRow(new QLabel("预期宽度"), QSBWidth);
+    form.addRow(new QLabel("将使用高度"), QLBHeight);
+    form.addRow(new QLabel("跳过x块后插入 (0表示正常插入)"), QSBRight);
+    form.addRow(new QLabel("是否允许插入空快"), QCBAllowEmpty);
+
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
+    form.addRow(&buttonBox);
+
+    connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    connect(QSBWidth, QOverload<int>::of(&QSpinBox::valueChanged), [=](int value) {
+        QSBRight->setMaximum(value-1);
+        if (selectedId % lineMax + value > lineMax)
+            QLBHeight->setText(QString("宽度越界"));
+        else
+            QLBHeight->setText(QString("%1").arg((int) ceil(compressedImageList.count() * 1.0 / value)));
+    });
+
+    //插入前计算
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        DialogResult result = DialogResult();
+        result.right = QSBRight->value();
+        result.width = QSBWidth->value();
+        result.allowEmpty = QCBAllowEmpty->isChecked();
+        result.isAccept = true;
+        return result;
+    }
+    else
+    {
+        return {};
+    }
+}
+
+bool TilesetEditor::isGBAEmptyImage(const QImage& image)
+{
+    int width = image.width();
+    int height = image.height();
+
+    bool success = true;
+    for (int yCompIdx = 0; yCompIdx < height; yCompIdx++)
+    {
+        for (int xCompIdx = 0; xCompIdx < width; xCompIdx++)
+        {
+            if (image.pixelColor(xCompIdx, yCompIdx) !=
+                image.colorTable().at(0))
+            {
+                success = false;
+                break;
+            }
+        }
+        if (!success)
+            break;
+    }
+
+    return success;
+}

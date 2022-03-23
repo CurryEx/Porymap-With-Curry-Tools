@@ -2222,7 +2222,7 @@ void Editor::on_actionImportToMap_triggered() const
         msgBox.exec();
         return;
     }
-    QJsonArray arr;
+    QJsonArray sequenceArray;
     int height;
     int width;
     if ( jsonDocument.isObject() )
@@ -2234,11 +2234,11 @@ void Editor::on_actionImportToMap_triggered() const
             {
                 height = jsonObject.value( "height" ).toInt();
                 width = jsonObject.value( "width" ).toInt();
-                arr = jsonObject.value( "sequence" ).toArray();
+                sequenceArray = jsonObject.value("sequence" ).toArray();
             }
         }
     }
-    if(arr.count()==0)
+    if(sequenceArray.count() == 0)
     {
         msgBox.setInformativeText(QString("文件解析失败"));
         msgBox.exec();
@@ -2288,8 +2288,10 @@ void Editor::on_actionImportToMap_triggered() const
         {
             for(int j=0;j<width;j++)
             {
+                if(sequenceArray.at(i * width + j).toInt() == -1)
+                    continue;
                 progressDialog->setValue(i*width+j);
-                this->metatile_selector_item->select(arr.at(i*width+j).toInt());
+                this->metatile_selector_item->select(sequenceArray.at(i * width + j).toInt());
                 this->map_item->paintNormal(x+j,y+i,true);
             }
         }
