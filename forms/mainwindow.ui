@@ -2941,7 +2941,7 @@
   </action>
   <action name="actionImportToMap">
    <property name="text">
-    <string>导入到地图</string>
+    <string>导入Json到地图</string>
    </property>
   </action>
   <action name="actionCTilesetEditor">

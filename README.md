@@ -10,6 +10,8 @@
 
 感谢你花时间访问本项目，业余时间开发，代码水平不高，编程意识薄弱，可能出现bug，**请多多包涵、多多见谅，感谢**
 
+懂中文的朋友我就不配图了，点进去一用就明白。
+
 ## 2. 新功能
 
 > **定义：在地图块编辑器中，左边的图叫Metatile，右边的图叫Tile**
@@ -70,6 +72,8 @@
 
     导出AM中可以导入的.map地图文件，包括bvd、dib、pal。由于AM设计缺陷，边缘地图快需要设置为2x2。参数：
     - 文件名
+    - tileset 1：在AM-地图头中对应的 tileset 1
+    - tileset 2：在AM-地图头中对应的 tileset 2
 
 
 以上这些功能足以让你快速完成一张地图，enjoy！
@@ -95,7 +99,7 @@ However, many hack groups still use the way of functions hook, such as CFRU, to 
 
 Please excuse my poor coding and English writing.
 
-Apology to not translate labels in program now, due to not all of my group members could read English. I will learn to add mutil-languages labels in this project in spare time.
+Apology to **not translate labels in program now**, due to not all of my group members could read English. I will learn to add mutil-languages labels in this project in spare time.
 
 
 ## 2. What's new
@@ -103,61 +107,74 @@ Apology to not translate labels in program now, due to not all of my group membe
 > **The left image in Tileset Editor is named Metatile, the right one is Tile**
 
 > tools 1-5 found in `Tileset Tditor-Curry Tools(咖喱的小工具)`
+> ![Tool1-5](MDResources/tool1-5.png)
 
 1. Compress and import image to Tiles (压缩并导入图片到Tiles)
 
-    - **this function will start with current selected Tile**
+   ![import tile](MDResources/导入tile.gif)
 
-    select and compress an indexed image, must be 16 colors, and import to Tiles. You need to set:
-    - width (预期宽度)：the width of compressed image in Tiles
-    - skip x Tiles (跳过x块后插入)：after current selected Tile, skip x Tiles first and import. This function is use for not waste any row. Parameters:
-    - allow empty (是否允许插入空块)：the blank blocks in image will be ignored
+   - **this function will start with current selected Tile**
+
+   select and compress an indexed image, must be 16 colors, and import to Tiles. You need to set:
+   - width (预期宽度)：the width of compressed image in Tiles
+   - skip x Tiles (跳过x块后插入)：after current selected Tile, skip x Tiles first and import. This function is use for not waste any row. Parameters:
+   - allow empty (是否允许插入空块)：the blank blocks in image will be ignored
 
 
 2. Generate Metatiles by image and Tiles (根据Tiles生成图片到Metatile)
 
-    - **this function will start with current selected Metatile**
+   ![import metatile](MDResources/导入metatile.gif)
 
-    - **any imported blocks will use current selected Metatile's attribute, include bottom tiles, layer type, behavior...**
+   ![import json](MDResources/导入json.gif)
 
-    auto generate Metatiles with selected image(generally the same as tool 1), palette, and tiles. After finishing, there is a Json file will be created, it is record the corresponding relationship with image and Metatiles. Using the Json file in `main window-Curry tools(咖喱的小工具)-Import Json to map(导入Json到地图)`. Parameters:
-    - width (预期宽度)：the width of compressed image in Metatiles
-    - skip x Tiles (跳过x块后插入)：after current selected Tile, skip x Tiles first and import. This function is use for not waste any row
-    - allow empty (是否允许插入空块)：the blank blocks in image will be ignored
+   - **this function will start with current selected Metatile**
+
+   - **any imported blocks will use current selected Metatile's attribute, include bottom tiles, layer type, behavior...**
+
+   auto generate Metatiles with selected image(generally the same as tool 1), palette, and tiles. After finishing, there is a Json file will be created, it is record the corresponding relationship with image and Metatiles. Using the Json file in `main window-Curry tools(咖喱的小工具)-Import Json to map(导入Json到地图)`. Parameters:
+   - width (预期宽度)：the width of compressed image in Metatiles
+   - skip x Tiles (跳过x块后插入)：after current selected Tile, skip x Tiles first and import. This function is use for not waste any row
+   - allow empty (是否允许插入空块)：the blank blocks in image will be ignored
 
 
 3. Expand tiles (扩充***Tiles)
 
    expand Primary or Secondary Tiles。Parameter:
-    - nums (扩充到大小)：the num should greater than current, less than max, divided by 16
+   - nums (扩充到大小)：The num you want to expand to. Input should greater than current, less than max, divided by 16
 
 
 4. Export Tilesets in AdvanceMap format(导出AM格式的***地图块)
 
-    export Primary or Secondary tilesets in AdvancedMap format, include bvd, dib, pal files. Parameter:
-    - filename：start with filename, create bvd, dib, pal files
+   ![export tileset](MDResources/导出地图块.gif)
+
+   export Primary or Secondary tilesets in AdvancedMap format, include bvd, dib, pal files. Parameter:
+   - filename：start with filename, create bvd, dib, pal files
 
 
 5. Export current palette(导出当前调色板)
 
-    export pure pal format palette tile. Para:
-    - filename
+   export pure pal format palette tile. Para:
+   - filename
 
 
 6. Import new Photoshop version pal file(导入新版PS调色板)
 
    - **found in `palette editor-tools`**
 
-    new version of Photoshop will create palette with a header, this tool can import correctly. Para:
-    - filename
+   new version of Photoshop will create palette with a header, this tool can import correctly. Para:
+   - filename
 
 
 7. export AdvanceMap map(导出AM格式地图)
 
-    - **found in `main window-Curry tools(咖喱的小工具)-export AdvanceMap map(导出AM1.92地图)`**
+   ![export map](MDResources/导出地图.gif)
 
-    export .map file in AdvanceMap format. Due to tha AdvanceMap feature, you need to set border to 2x2. Para:
-    - filename
+   - **found in `main window-Curry tools(咖喱的小工具)-export AdvanceMap map(导出AM1.92地图)`**
+
+   export .map file in AdvanceMap format. Due to tha AdvanceMap feature, you need to set border to 2x2. Para:
+   - filename
+   - Tileset 1：match `AdvanceMap-Header-Tileset 1`
+   - Tileset 2：match `AdvanceMap-Header-Tileset 2`
 
 
 ## 3. How to use
