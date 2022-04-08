@@ -2079,10 +2079,10 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     data.append(static_cast<char>(b[2]));
     data.append(static_cast<char>(b[3]));
 
-    //metatile部分
+    //metatile数据部分
+    int numTiles = projectConfig.getTripleLayerMetatilesEnabled() ? 12 : 8;
     for (auto each: tileset->metatiles)
     {
-        int numTiles = projectConfig.getTripleLayerMetatilesEnabled() ? 12 : 8;
         for (int i = 0; i < numTiles; i++)
         {
             uint16_t tile = each->tiles.at(i).rawValue();
@@ -2132,7 +2132,12 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
         msgBox.setInformativeText(QString("调色板文件保存失败"));
         msgBox.exec();
     }
-    for (auto each: this->primaryTileset->palettes.at(this->paletteId))
+    QList<QList<QRgb>> targetPal;
+    if(isPrimary)
+        targetPal = this->primaryTileset->palettes;
+    else
+        targetPal = this->secondaryTileset->palettes;
+    for (auto each: targetPal.at(this->paletteId))
     {
         QColor color = QColor(each);
         data.append(static_cast<char>(color.red()));
@@ -2150,7 +2155,12 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
         msgBox.setInformativeText(QString("图片文件保存失败"));
         msgBox.exec();
     }
-    QImage image = this->tileSelector->buildPrimaryTilesIndexedImage();
+    QImage image;
+    if(isPrimary)
+        image = this->tileSelector->buildPrimaryTilesIndexedImage();
+    else
+        image = this->tileSelector->buildSecondaryTilesIndexedImage();
+
     image = image.convertToFormat(QImage::Format_RGB888);
     image.save(dibFile, "BMP");
     dibFile->close();
@@ -2185,9 +2195,22 @@ void TilesetEditor::on_actionExportCurrentPalttle_triggered()
         msgBox.exec();
     }
 
+    //提示用户
+    msgBox.setIcon(QMessageBox::Icon::Information);
+    msgBox.setText("提示");
+    msgBox.setInformativeText(QString("若导出的调色板不正确，请先选择需要导出的tile后再尝试导出。"));
+    msgBox.exec();
+    msgBox.setIcon(QMessageBox::Icon::Critical);
+    msgBox.setText("失败");
+
+    //获取当前选择的tile
+    int selectedTileId = this->tileSelector->getSelectedTiles().at(0).tileId;
+    bool primary = selectedTileId < this->primaryTileset->tiles.count();
+    auto target = primary?this->primaryTileset->palettes:this->secondaryTileset->palettes;
+
     //元数据数组
     QByteArray data;
-    for (auto each: this->primaryTileset->palettes.at(this->paletteId))
+    for (auto each: target.at(this->paletteId))
     {
         QColor color = QColor(each);
         data.append(static_cast<char>(color.red()));
