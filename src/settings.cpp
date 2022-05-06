@@ -7,3 +7,6 @@ Settings::Settings()
     this->playerViewRectEnabled = false;
     this->cursorTileRectEnabled = true;
 }
+
+QTranslator * Settings::translator = nullptr;
+Settings::Language Settings::language = Settings::Chinese;

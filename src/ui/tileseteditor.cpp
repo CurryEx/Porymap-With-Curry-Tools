@@ -1217,7 +1217,7 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
     QMessageBox msgBox(this);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Critical);
-    msgBox.setText("失败");
+    msgBox.setText(tr("失败"));
 
     //获取当前选择的tile
     int selectedTileId = this->tileSelector->getSelectedTiles().at(0).tileId;
@@ -1228,7 +1228,7 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
     if (!primary)
         if (Project::getNumTilesPrimary() != this->primaryTileset->tiles.count())
         {
-            msgBox.setInformativeText(QString("发现当前PrimaryTiles数量为 %1 并非项目设定的数量 %2 ，若要使用secondary tiles请先扩充到 %3")
+            msgBox.setInformativeText(tr("发现当前PrimaryTiles数量为 %1 并非项目设定的数量 %2 ，若要使用secondary tiles请先扩充到 %3")
                                               .arg(this->primaryTileset->tiles.count())
                                               .arg(Project::getNumTilesPrimary())
                                               .arg(Project::getNumTilesPrimary()));
@@ -1239,9 +1239,9 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
     //导入图片
     QString filepath = QFileDialog::getOpenFileName(
             this,
-            QString("选择图片"),
+            tr("选择图片"),
             this->project->root,
-            "图片 (*.png *.bmp *.jpg *.dib)");
+            tr("图片 (*.png *.bmp *.jpg *.dib)"));
     if (filepath.isEmpty())
     {
         return;
@@ -1257,14 +1257,14 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
     }
     else
     {
-        msgBox.setInformativeText("不能打开图片 请检查格式");
+        msgBox.setInformativeText(tr("不能打开图片 请检查格式"));
         msgBox.exec();
         return;
     }
     if (image.width() == 0 || image.height() == 0 || image.width() % 8 != 0 || image.height() % 8 != 0)
     {
         msgBox.setInformativeText(
-                QString("图片长 宽为 (%1 x %2) 必须都被8整除")
+                tr("图片宽 高为 (%1 x %2) 必须都被8整除")
                         .arg(image.width())
                         .arg(image.height()));
         msgBox.exec();
@@ -1272,8 +1272,7 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
     }
     if (image.colorCount() != 16)
     {
-        msgBox.setInformativeText(
-                QString("图片必须被索引到16色"));
+        msgBox.setInformativeText(tr("图片必须被索引到16色"));
         msgBox.exec();
         return;
     }
@@ -1293,14 +1292,14 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
         {
             if (right >= exceptWidth)
             {
-                msgBox.setInformativeText(QString("宽度越界"));
+                msgBox.setInformativeText(tr("宽度越界"));
                 msgBox.exec();
                 return;
             }
         }
         if (selectedTileId % 16 + exceptWidth > 16)
         {
-            msgBox.setInformativeText(QString("宽度越界"));
+            msgBox.setInformativeText(tr("宽度越界"));
             msgBox.exec();
             return;
         }
@@ -1331,7 +1330,7 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
 
         if (allowBlock < compressedTiles.count())
         {
-            msgBox.setInformativeText(QString("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
+            msgBox.setInformativeText(tr("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
                                               .arg(allowBlock)
                                               .arg(compressedTiles.count()));
             msgBox.exec();
@@ -1344,10 +1343,10 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
         progressDialog->setMinimumDuration(0);
         progressDialog->setCancelButton(nullptr);
         progressDialog->setWindowTitle(tr("请稍等"));
-        progressDialog->setLabelText(
+        progressDialog->setLabelText(tr(
                 "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
                 "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
-                "喝杯Java 耐心等待");
+                "喝杯Java 耐心等待"));
         progressDialog->setRange(0, compressedTiles.count());
 
         //正式填入 可能会卡一下
@@ -1515,7 +1514,7 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
     if (!primary)
         if (Project::getNumMetatilesPrimary() != this->primaryTileset->metatiles.count())
         {
-            msgBox.setInformativeText(QString("发现当前PrimaryMetatiles数量为 %1 并非项目设定的数量 %2 ，若要使用secondary metatile请先扩充到 %3")
+            msgBox.setInformativeText(tr("发现当前PrimaryMetatiles数量为 %1 并非项目设定的数量 %2 ，若要使用secondary metatile请先扩充到 %3")
                                               .arg(this->primaryTileset->metatiles.count())
                                               .arg(Project::getNumMetatilesPrimary())
                                               .arg(Project::getNumMetatilesPrimary()));
@@ -1524,14 +1523,14 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
         }
 
     QMessageBox confirm(this);
-    confirm.setText("提示");
+    confirm.setText(tr("提示"));
     confirm.setInformativeText(
-            QString("请仔细阅读\n\n"
+            tr("请仔细阅读\n\n"
                     "1.将从当前选择的调色板继续接下来的处理\n\n"
                     "2.当前选择的Metatile将作为插入位置\n\n"
                     "3.所有插入的Metatile会使用当前选择的Metatile属性 需要更改请取消后修改\n\n"));
-    auto cancel = confirm.addButton("重新选择", QMessageBox::ActionRole);
-    confirm.addButton("继续", QMessageBox::ActionRole);
+    auto cancel = confirm.addButton(tr("重新选择"), QMessageBox::ActionRole);
+    confirm.addButton(tr("继续"), QMessageBox::ActionRole);
     confirm.setIcon(QMessageBox::Icon::Information);
     confirm.exec();
     if (confirm.clickedButton() == cancel)
@@ -1539,9 +1538,9 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
 
     QString filepath = QFileDialog::getOpenFileName(
             this,
-            QString("导入图片"),
+            tr("导入图片"),
             this->project->root,
-            "图片 (*.png *.bmp *.jpg *.dib)");
+            tr("图片 (*.png *.bmp *.jpg *.dib)"));
     if (filepath.isEmpty())
     {
         return;
@@ -1557,16 +1556,16 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
     }
     else
     {
-        msgBox.setText("错误");
-        msgBox.setInformativeText("无法打开图片");
+        msgBox.setText(tr("错误"));
+        msgBox.setInformativeText(tr("无法打开图片"));
         msgBox.exec();
         return;
     }
     if (image.width() == 0 || image.height() == 0 || image.width() % 16 != 0 || image.height() % 16 != 0)
     {
-        msgBox.setText("错误");
+        msgBox.setText(tr("错误"));
         msgBox.setInformativeText(
-                QString("图片的宽 高为 (%1 x %2) 都必须被16整除")
+                tr("图片的宽 高为 (%1 x %2) 都必须被16整除")
                         .arg(image.width())
                         .arg(image.height()));
         msgBox.exec();
@@ -1620,14 +1619,14 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
         {
             if (right >= exceptWidth)
             {
-                msgBox.setInformativeText(QString("宽度越界"));
+                msgBox.setInformativeText(tr("宽度越界"));
                 msgBox.exec();
                 return;
             }
         }
         if (selectedMetatileId % 8 + exceptWidth > 8)
         {
-            msgBox.setInformativeText(QString("宽度越界"));
+            msgBox.setInformativeText(tr("宽度越界"));
             msgBox.exec();
             return;
         }
@@ -1659,7 +1658,7 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
 
         if (allowBlock < compressedMetatiles.count())
         {
-            msgBox.setInformativeText(QString("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
+            msgBox.setInformativeText(tr("容量不足 设置的参数共能使用 %1 块 而图片共有 %2 块")
                                               .arg(allowBlock)
                                               .arg(compressedMetatiles.count()));
             msgBox.exec();
@@ -1672,10 +1671,10 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
         progressDialog->setMinimumDuration(0);
         progressDialog->setCancelButton(nullptr);
         progressDialog->setWindowTitle(tr("请稍等"));
-        progressDialog->setLabelText(
+        progressDialog->setLabelText(tr(
                 "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
                 "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
-                "喝杯Java 耐心等待");
+                "喝杯Java 耐心等待"));
         progressDialog->setRange(0, compressedMetatiles.count());
 
         //获取当前选择的metatile参数
@@ -1745,22 +1744,22 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
             metatileToEdit->terrainType = terrainType;
             metatileToEdit->behavior = behavior;
             metatileToEdit->label = "";
-            logInfo(QString("nowIndex %1 totalTiles %2 image %3x%4 %5x%6")
-                            .arg(nowIndex)
-                            .arg(totalTiles)
-                            .arg(image.width())
-                            .arg(image.height())
-                            .arg(numTilesWide)
-                            .arg(numTilesHigh)
-            );
+//            logInfo(QString("nowIndex %1 totalTiles %2 image %3x%4 %5x%6")
+//                            .arg(nowIndex)
+//                            .arg(totalTiles)
+//                            .arg(image.width())
+//                            .arg(image.height())
+//                            .arg(numTilesWide)
+//                            .arg(numTilesHigh)
+//            );
             auto list = matchTile(compressedMetatiles.at(nowIndex));
             if (list.length() == 0)
             {
                 progressDialog->close();
-                msgBox.setInformativeText("可能原因1.原图与右图(tile)不匹配 可能修改过大小。\n"
-                                          "2.调色板选择错误\n"
-                                          "3.初始选定的位置不正确\n"
-                                          "请检查后重试");
+                msgBox.setInformativeText(tr("可能原因\n"
+                                             "1.原图与右图(tile)不匹配 可能修改过大小。\n"
+                                             "2.调色板选择错误\n"
+                                             "请检查后重试"));
                 msgBox.exec();
                 return;
             }
@@ -1796,15 +1795,17 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
 
     //保存json
     msgBox.setIcon(QMessageBox::Icon::Information);
-    msgBox.setInformativeText(QString("图片本来需要 %1 块 经处理被压缩至 %2 块\n\n"
+    msgBox.setInformativeText(tr("图片本来需要 %1 块 经处理被压缩至 %2 块\n\n"
                                       "将生成导入辅助文件以供自动导入地图 请选择保存位置 默认与图片相同\n\n")
                                       .arg(totalTiles).arg(compressedMetatiles.count()));
     msgBox.exec();
     msgBox.setIcon(QMessageBox::Icon::Critical);
 
     QString defaultPath = QString("%1.json").arg(filepath);
-    QString jsonFilePath = QFileDialog::getSaveFileName(this, "保存导入辅助文件", defaultPath,
-                                                        "辅助json (*.json)");
+    QString jsonFilePath = QFileDialog::getSaveFileName(this,
+                                                        tr("保存导入辅助json"),
+                                                        defaultPath,
+                                                        tr("辅助json (*.json)"));
 
     QJsonObject jsonObject;
     jsonObject["sequence"] = sequence;
@@ -1820,15 +1821,15 @@ void TilesetEditor::on_actionImportImageToMetatileReferToTiles_triggered()
 
     if (!jsonFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
-        msgBox.setInformativeText(QString("选择的保存位置打开失败"));
+        msgBox.setInformativeText(tr("选择的保存位置打开失败"));
         msgBox.exec();
         return;
     }
     jsonFile->write(jsonDoc.toJson());
     jsonFile->close();
 
-    msgBox.setText("恭喜");
-    msgBox.setInformativeText(QString("自动拼图顺利完成"));
+    msgBox.setText(tr("恭喜"));
+    msgBox.setInformativeText(tr("自动拼图顺利完成"));
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Information);
     msgBox.exec();
@@ -1950,18 +1951,18 @@ void TilesetEditor::expandTiles(bool isPrimary)
     msgBox.setIcon(QMessageBox::Icon::Critical);
 
     QDialog dialog(this, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-    dialog.setWindowTitle("扩充Tiles");
+    dialog.setWindowTitle(tr("扩充Tiles"));
     dialog.setWindowModality(Qt::NonModal);
 
     QFormLayout form(&dialog);
     auto *QSBHeight = new QSpinBox();
     QSBHeight->setMinimum(count);
     QSBHeight->setMaximum(max);
-    form.addRow(new QLabel(QString(" %1 Tiles 共有 %2 块，要扩充到多少块？输入的值必须大于当前值、小于等于 %3 、并是16的倍数")
+    form.addRow(new QLabel(tr("%1 Tiles 共有 %2 块，要扩充到多少块？输入的值必须大于当前值、小于等于 %3 、并是16的倍数")
                                    .arg(isPrimary ? "Primary" : "Secondary")
                                    .arg(count)
                                    .arg(max)));
-    form.addRow(new QLabel("扩充到大小"), QSBHeight);
+    form.addRow(new QLabel(tr("扩充到大小")), QSBHeight);
 
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
     connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
@@ -1974,8 +1975,8 @@ void TilesetEditor::expandTiles(bool isPrimary)
         int expandTo = QSBHeight->value();
         if (expandTo % 16 != 0 || expandTo > max || expandTo <= count)
         {
-            msgBox.setText("失败");
-            msgBox.setInformativeText(QString("输入的值必须大于当前值、小于等于 %1 、并是16的倍数")
+            msgBox.setText(tr("失败"));
+            msgBox.setInformativeText(tr("输入的值必须大于当前值、小于等于 %1 、并是16的倍数")
                                               .arg(max));
             msgBox.exec();
             return;
@@ -2023,20 +2024,21 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     QMessageBox msgBox(this);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Critical);
-    msgBox.setText("失败");
+    msgBox.setText(tr("失败"));
 
     //未保存
     if (this->hasUnsavedChanges)
     {
-        msgBox.setInformativeText("当前变更没有保存，请先保存。");
+        msgBox.setInformativeText(tr("当前变更没有保存，请先保存。"));
         msgBox.exec();
         return;
     }
 
     //打开文件
-    QString filepath = QFileDialog::getSaveFileName(this, "导出AM格式地图块",
+    QString filepath = QFileDialog::getSaveFileName(this,
+                                                    tr("导出AM格式地图块"),
                                                     this->project->root,
-                                                    "AM地图块文件 (*)");
+                                                    tr("AM地图块文件 (*)"));
     if (filepath.isEmpty())
         return;
 
@@ -2044,7 +2046,7 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     auto bvdFile = new QFile(filepath + ".bvd");
     if (!bvdFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
-        msgBox.setInformativeText(QString("bvd文件保存失败"));
+        msgBox.setInformativeText(tr("bvd文件保存失败"));
         msgBox.exec();
         return;
     }
@@ -2129,7 +2131,7 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     auto palFile = new QFile(filepath + ".pal");
     if (!palFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
-        msgBox.setInformativeText(QString("调色板文件保存失败"));
+        msgBox.setInformativeText(tr("调色板文件保存失败"));
         msgBox.exec();
     }
     QList<QList<QRgb>> targetPal;
@@ -2152,7 +2154,7 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     auto dibFile = new QFile(filepath + ".dib");
     if (!dibFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
-        msgBox.setInformativeText(QString("图片文件保存失败"));
+        msgBox.setInformativeText(tr("图片文件保存失败"));
         msgBox.exec();
     }
     QImage image;
@@ -2166,8 +2168,8 @@ void TilesetEditor::exportMetatilesToAM(bool isPrimary)
     dibFile->close();
 
     //完成
-    msgBox.setText("恭喜");
-    msgBox.setInformativeText(QString("保存成功"));
+    msgBox.setText(tr("恭喜"));
+    msgBox.setInformativeText(tr("保存成功"));
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Information);
     msgBox.exec();
@@ -2180,28 +2182,29 @@ void TilesetEditor::on_actionExportCurrentPalttle_triggered()
     QMessageBox msgBox(this);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Critical);
-    msgBox.setText("失败");
+    msgBox.setText(tr("失败"));
 
     //打开文件
-    QString filepath = QFileDialog::getSaveFileName(this, "导出当前调色板",
+    QString filepath = QFileDialog::getSaveFileName(this,
+                                                    tr("导出当前调色板"),
                                                     this->project->root,
-                                                    "调色板文件 (*.pal)");
+                                                    tr("调色板文件 (*.pal)"));
     if (filepath.isEmpty())
         return;
     auto palFile = new QFile(filepath);
     if (!palFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
-        msgBox.setInformativeText(QString("调色板文件保存失败"));
+        msgBox.setInformativeText(tr("调色板文件保存失败"));
         msgBox.exec();
     }
 
     //提示用户
     msgBox.setIcon(QMessageBox::Icon::Information);
-    msgBox.setText("提示");
-    msgBox.setInformativeText(QString("若导出的调色板不正确，请先选择需要导出的tile后再尝试导出。"));
+    msgBox.setText(tr("提示"));
+    msgBox.setInformativeText(tr("若导出的调色板不正确，请先选择需要导出的tile后再尝试导出。"));
     msgBox.exec();
     msgBox.setIcon(QMessageBox::Icon::Critical);
-    msgBox.setText("失败");
+    msgBox.setText(tr("失败"));
 
     //获取当前选择的tile
     int selectedTileId = this->tileSelector->getSelectedTiles().at(0).tileId;
@@ -2222,8 +2225,8 @@ void TilesetEditor::on_actionExportCurrentPalttle_triggered()
     palFile->close();
 
     //完成
-    msgBox.setText("恭喜");
-    msgBox.setInformativeText(QString("保存成功"));
+    msgBox.setText(tr("恭喜"));
+    msgBox.setInformativeText(tr("保存成功"));
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Information);
     msgBox.exec();
@@ -2243,9 +2246,9 @@ QList<QImage> TilesetEditor::compressImage(const QImage &image, bool allowFlip, 
     compressProgress->setCancelButton(nullptr);
     compressProgress->setWindowTitle(tr("请稍等"));
     compressProgress->setLabelText(
-            "1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
+            tr("1.请耐心等待 咖喱想偷懒 使用了暴力遍历的方式 效率低下\n\n"
             "2.还是偷懒 本窗口是阻塞式的 会出现未响应 是正常现象 有计划使用线程实现\n\n"
-            "喝杯Java 耐心等待");
+            "喝杯Java 耐心等待"));
     compressProgress->setRange(0, totalTiles);
     //压缩
     QList<QImage> compressedImage;
@@ -2303,7 +2306,7 @@ TilesetEditor::DialogResult TilesetEditor::createParametersDialog(bool isMetatil
         lineMax = 16;
     //输入参数
     QDialog dialog(this, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-    dialog.setWindowTitle("确认");
+    dialog.setWindowTitle(tr("确认"));
     dialog.setWindowModality(Qt::NonModal);
 
     QFormLayout form(&dialog);
@@ -2318,11 +2321,11 @@ TilesetEditor::DialogResult TilesetEditor::createParametersDialog(bool isMetatil
     QSBRight->setMaximum(QSBWidth->value()-1);
     auto *QCBAllowEmpty = new QCheckBox();
     QCBAllowEmpty->setChecked(true);
-    form.addRow(new QLabel(QString("当前选择的位置作为开始位置，共需要 %1 块tile，输入相关参数").arg(compressedImageList.count())));
-    form.addRow(new QLabel("预期宽度"), QSBWidth);
-    form.addRow(new QLabel("将使用高度"), QLBHeight);
-    form.addRow(new QLabel("跳过x块后插入 (0表示正常插入)"), QSBRight);
-    form.addRow(new QLabel("是否允许插入空快"), QCBAllowEmpty);
+    form.addRow(new QLabel(tr("当前选择的位置作为开始位置，共需要 %1 块tile，输入相关参数").arg(compressedImageList.count())));
+    form.addRow(new QLabel(tr("预期宽度")), QSBWidth);
+    form.addRow(new QLabel(tr("将使用高度")), QLBHeight);
+    form.addRow(new QLabel(tr("跳过x块后插入 (0表示正常插入)")), QSBRight);
+    form.addRow(new QLabel(tr("是否允许插入空快")), QCBAllowEmpty);
 
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
     form.addRow(&buttonBox);
@@ -2332,7 +2335,7 @@ TilesetEditor::DialogResult TilesetEditor::createParametersDialog(bool isMetatil
     connect(QSBWidth, QOverload<int>::of(&QSpinBox::valueChanged), [=](int value) {
         QSBRight->setMaximum(value-1);
         if (selectedId % lineMax + value > lineMax)
-            QLBHeight->setText(QString("宽度越界"));
+            QLBHeight->setText(QString(tr("宽度越界")));
         else
             QLBHeight->setText(QString("%1").arg((int) ceil(compressedImageList.count() * 1.0 / value)));
     });

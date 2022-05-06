@@ -813,8 +813,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>428</width>
-                                <height>75</height>
+                                <width>330</width>
+                                <height>87</height>
                                </rect>
                               </property>
                               <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -1003,8 +1003,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>411</width>
-                          <height>452</height>
+                          <width>330</width>
+                          <height>423</height>
                          </rect>
                         </property>
                         <property name="sizePolicy">
@@ -1154,8 +1154,8 @@
                          <rect>
                           <x>0</x>
                           <y>0</y>
-                          <width>428</width>
-                          <height>701</height>
+                          <width>351</width>
+                          <height>689</height>
                          </rect>
                         </property>
                         <layout class="QGridLayout" name="gridLayout_7">
@@ -2561,7 +2561,7 @@
      <x>0</x>
      <y>0</y>
      <width>1287</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2639,6 +2639,8 @@
     </property>
     <addaction name="actionImportToMap"/>
     <addaction name="actionExportMapToAM"/>
+    <addaction name="separator"/>
+    <addaction name="actionChangeLanguage"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -2944,14 +2946,14 @@
     <string>导入Json到地图</string>
    </property>
   </action>
-  <action name="actionCTilesetEditor">
-   <property name="text">
-    <string>CTilesetEditor</string>
-   </property>
-  </action>
   <action name="actionExportMapToAM">
    <property name="text">
     <string>导出AM1.92地图</string>
+   </property>
+  </action>
+  <action name="actionChangeLanguage">
+   <property name="text">
+    <string>tools -&gt; 中文/English</string>
    </property>
   </action>
  </widget>

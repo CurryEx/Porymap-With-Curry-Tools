@@ -341,6 +341,7 @@ private slots:
     //@Curry
     void on_actionImportToMap_triggered();
     void on_actionExportMapToAM_triggered();
+    void on_actionChangeLanguage_triggered();
 
 
 private:

@@ -47,7 +47,7 @@
          <x>0</x>
          <y>0</y>
          <width>272</width>
-         <height>638</height>
+         <height>626</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -414,8 +414,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>400</width>
-            <height>318</height>
+            <width>395</width>
+            <height>271</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
@@ -508,7 +508,7 @@
      <x>0</x>
      <y>0</y>
      <width>700</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -659,11 +659,6 @@
   <action name="actionImportImageToMetatileReferToTiles">
    <property name="text">
     <string>根据Tiles生成图片到Metatile</string>
-   </property>
-  </action>
-  <action name="actionCompressAndImportImageToMetatile">
-   <property name="text">
-    <string>压缩并导入图片到Metatile</string>
    </property>
   </action>
   <action name="actionExpandPrimaryTile">

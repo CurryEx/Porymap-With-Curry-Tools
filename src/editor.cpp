@@ -2192,16 +2192,16 @@ void Editor::on_actionImportToMap_triggered() const
 {
     //建一个警告框给后面用
     QMessageBox msgBox;
-    msgBox.setText("失败");
+    msgBox.setText(tr("失败"));
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Critical);
 
     //打开json文件
     QString filepath = QFileDialog::getOpenFileName(
             nullptr,
-            QString("打开导入辅助文件"),
+            tr("打开辅助json"),
             this->project->root,
-            "辅助json (*.json)");
+            tr("辅助json (*.json)"));
     if (filepath.isEmpty())
     {
         return;
@@ -2209,7 +2209,7 @@ void Editor::on_actionImportToMap_triggered() const
     QFile file(filepath);
     if(!file.open(QIODevice::ReadOnly))
     {
-        msgBox.setInformativeText(QString("文件打开失败"));
+        msgBox.setInformativeText(tr("文件打开失败"));
         msgBox.exec();
         return;
     }
@@ -2218,7 +2218,7 @@ void Editor::on_actionImportToMap_triggered() const
     QJsonDocument jsonDocument = QJsonDocument::fromJson( file.readAll(), jsonParserError );
     if(jsonParserError->error != QJsonParseError::NoError)
     {
-        msgBox.setInformativeText(QString("文件解析失败"));
+        msgBox.setInformativeText(tr("文件解析失败"));
         msgBox.exec();
         return;
     }
@@ -2240,14 +2240,14 @@ void Editor::on_actionImportToMap_triggered() const
     }
     if(sequenceArray.count() == 0)
     {
-        msgBox.setInformativeText(QString("文件解析失败"));
+        msgBox.setInformativeText(tr("文件解析失败"));
         msgBox.exec();
         return;
     }
 
     //输入参数
     QDialog dialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-    dialog.setWindowTitle("插入图片参数");
+    dialog.setWindowTitle(tr("插入图片参数"));
     dialog.setWindowModality(Qt::NonModal);
 
     QFormLayout form(&dialog);
@@ -2258,10 +2258,10 @@ void Editor::on_actionImportToMap_triggered() const
     QSBy->setMinimum(0);
     QSBx->setMaximum(999);
     QSBy->setMaximum(999);
-    form.addRow(new QLabel(QString("要插入的图块宽高为 %1 x %2\n\n请输入插入坐标 若没有记录请返回后将鼠标放在地图上 在软件左下角查看")
+    form.addRow(new QLabel(tr("要插入的图块宽高为 %1 x %2\n\n请输入插入坐标 若没有记录请返回后将鼠标放在地图上 在软件左下角查看")
     .arg(width).arg(height)));
-    form.addRow(new QLabel("插入位置x"), QSBx);
-    form.addRow(new QLabel("插入位置y"), QSBy);
+    form.addRow(new QLabel(tr("插入位置x")), QSBx);
+    form.addRow(new QLabel(tr("插入位置y")), QSBy);
 
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
     connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
@@ -2273,7 +2273,7 @@ void Editor::on_actionImportToMap_triggered() const
         int y = QSBy->value();
         if(x+width>map->getWidth()||y+height>map->getHeight())
         {
-            msgBox.setInformativeText("输入的xy坐标容不下将插入的图块");
+            msgBox.setInformativeText(tr("输入的xy坐标容不下将插入的图块"));
             msgBox.exec();
             return;
         }
@@ -2282,7 +2282,7 @@ void Editor::on_actionImportToMap_triggered() const
         progressDialog->setMinimumDuration(0);
         progressDialog->setCancelButton(nullptr);
         progressDialog->setWindowTitle(tr("请稍等"));
-        progressDialog->setLabelText("喝杯Java 耐心等待\n\n若出现未响应为正常现象");
+        progressDialog->setLabelText(tr("喝杯Java 耐心等待\n\n若出现未响应为正常现象"));
         progressDialog->setRange(0, height*width);
         for(int i=0;i<height;i++)
         {
@@ -2309,20 +2309,20 @@ void Editor::on_actionExportMapToAM_triggered()
     QMessageBox msgBox(nullptr);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Critical);
-    msgBox.setText("失败");
+    msgBox.setText(tr("失败"));
 
     if(2!=this->map->getBorderWidth() || 2!=this->map->getBorderHeight())
     {
-        msgBox.setInformativeText(QString("由于AM设计缺陷，边缘地图快只能设置为2x2，请先修改。"));
+        msgBox.setInformativeText(tr("由于AM设计缺陷，边缘地图快只能设置为2x2，请先修改。"));
         msgBox.exec();
         return;
     }
 
     //打开文件
     QString filepath = QFileDialog::getSaveFileName(nullptr,
-                                                    "导出AM格式地图块",
+                                                    tr("导出AM格式地图块"),
                                                     this->project->root,
-                                                    "AM地图文件 (*.map)");
+                                                    tr("AM地图文件 (*.map)"));
     if (filepath.isEmpty())
         return;
 
@@ -2330,7 +2330,7 @@ void Editor::on_actionExportMapToAM_triggered()
     auto mapFile = new QFile(filepath);
     if (!mapFile->open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
-        msgBox.setInformativeText(QString("map文件保存失败"));
+        msgBox.setInformativeText(tr("map文件保存失败"));
         msgBox.exec();
         return;
     }
@@ -2365,7 +2365,7 @@ void Editor::on_actionExportMapToAM_triggered()
 
     //参数输入框
     QDialog dialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-    dialog.setWindowTitle("要使用的地图块编号");
+    dialog.setWindowTitle(tr("要使用的地图块编号"));
     dialog.setWindowModality(Qt::NonModal);
 
     QFormLayout form(&dialog);
@@ -2376,7 +2376,7 @@ void Editor::on_actionExportMapToAM_triggered()
     QSBt1->setMinimum(0);
     QSBt0->setMaximum(254);
     QSBt1->setMaximum(254);
-    form.addRow(new QLabel("输入要使用的地图块编号，对应AM中的'使用的tilesets'"));
+    form.addRow(new QLabel(tr("输入要使用的地图块编号，对应AM中的'使用的tilesets'")));
     form.addRow(new QLabel("Tileset 1"), QSBt0);
     form.addRow(new QLabel("Tileset 2"), QSBt1);
 
@@ -2441,7 +2441,7 @@ void Editor::on_actionExportMapToAM_triggered()
         auto borderFile = new QFile(this->project->root+"/"+this->map->layout->border_path);
         if (!borderFile->open(QIODevice::ReadOnly))
         {
-            msgBox.setInformativeText(QString("border文件无法打开，检查porymap状态"));
+            msgBox.setInformativeText(tr("border文件无法打开，检查porymap状态"));
             msgBox.exec();
             return;
         }
@@ -2454,7 +2454,7 @@ void Editor::on_actionExportMapToAM_triggered()
     auto blockFile = new QFile(this->project->root+"/"+this->map->layout->blockdata_path);
     if (!blockFile->open(QIODevice::ReadOnly))
     {
-        msgBox.setInformativeText(QString("block文件无法打开，检查porymap状态"));
+        msgBox.setInformativeText(tr("block文件无法打开，检查porymap状态"));
         msgBox.exec();
         return;
     }
@@ -2467,10 +2467,9 @@ void Editor::on_actionExportMapToAM_triggered()
     mapFile->close();
 
     //完成
-    msgBox.setText("恭喜");
-    msgBox.setInformativeText(QString("保存成功"));
+    msgBox.setText(tr("恭喜"));
+    msgBox.setInformativeText(tr("保存成功"));
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Information);
     msgBox.exec();
 }
-

@@ -175,6 +175,9 @@ RESOURCES += \
     resources/images.qrc \
     resources/themes.qrc
 
+TRANSLATIONS = cn.ts\
+               en.ts
+
 INCLUDEPATH += include
 INCLUDEPATH += include/core
 INCLUDEPATH += include/ui

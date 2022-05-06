@@ -16,6 +16,7 @@
 #include "flowlayout.h"
 #include "shortcut.h"
 #include "mapparser.h"
+#include "settings.h"
 
 #include <QFileDialog>
 #include <QClipboard>
@@ -3219,14 +3220,32 @@ void MainWindow::on_actionExportMapToAM_triggered()
     QMessageBox msgBox(nullptr);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Icon::Critical);
-    msgBox.setText("失败");
+    msgBox.setText(tr("失败"));
 
     if (projectHasUnsavedChanges || (editor->map && editor->map->hasUnsavedChanges()))
     {
-            msgBox.setInformativeText("当前变更没有保存，请先保存。");
+            msgBox.setInformativeText(tr("当前变更没有保存，请先保存。"));
             msgBox.exec();
             return;
     }
     else
         this->editor->on_actionExportMapToAM_triggered();
+}
+
+void MainWindow::on_actionChangeLanguage_triggered()
+{
+    QTranslator * trans = Settings::translator;
+    switch(Settings::language)
+    {
+    case Settings::Chinese:
+        trans->load(qApp->applicationDirPath() + QString("/en.qm"));
+        Settings::language = Settings::English;
+        break;
+    case Settings::English:
+        trans->load(qApp->applicationDirPath() + QString("/cn.qm"));
+        Settings::language = Settings::Chinese;
+        break;
+    }
+    qApp->installTranslator(trans);
+    ui->retranslateUi(this);
 }
