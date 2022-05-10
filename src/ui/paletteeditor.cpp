@@ -354,7 +354,7 @@ void PaletteEditor::on_actionImport_new_palette_triggered()
     }
 
     if (palette.length() != 22) {
-        QString message = tr("色斑长度不正确 请确认是新版ps导出的16色色板(应有22长度) 当前文件长度 %1").arg(palette.length());
+        QString message = tr("调色板长度不正确 请确认是新版ps导出的16色色板(应有22长度) 当前文件长度 %1").arg(palette.length());
         msgBox.setInformativeText(message);
         msgBox.exec();
         return;

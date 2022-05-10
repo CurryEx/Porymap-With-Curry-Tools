@@ -99,7 +99,13 @@ However, many hack groups still use the way of functions hook, such as CFRU, to 
 
 Please excuse my poor coding and English writing.
 
-**Apology for not translating labels in the program now**, due to not all of my group members could read English. I will learn to add multi-languages labels in this project in my spare time.
+~~Apology for not translating labels in the program now**, due to not all of my group members could read English. I will learn to add multi-languages labels in this project in my spare time.~~
+
+**English version is now available.** The program will switch to English automatically by system language. If it is not working, just click the last option on the top of the main window. Or you can refer to GIFs below to learn how to use these tools.
+
+![Language](MDResources/切换语言.png)
+
+Some translation may be different from those in the thread.
 
 
 ## 2. What's new
