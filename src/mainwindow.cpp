@@ -3248,4 +3248,11 @@ void MainWindow::on_actionChangeLanguage_triggered()
     }
     qApp->installTranslator(trans);
     ui->retranslateUi(this);
+    //刷新tilesetEditor的翻译
+    if (this->tilesetEditor)
+    {
+        this->tilesetEditor->close();
+        delete this->tilesetEditor;
+    }
+    initTilesetEditor();
 }
