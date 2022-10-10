@@ -59,7 +59,7 @@ void PaletteUtil::writeJASC(QString filepath, QVector<QRgb> palette, int offset,
     }
 
     QFile file(filepath);
-    if (file.open(QIODevice::WriteOnly)) {
+    if (file.open(QIODevice::ReadWrite)) {
         file.write(text.toUtf8());
     } else {
         logWarn(QString("Could not write to file '%1': ").arg(filepath) + file.errorString());

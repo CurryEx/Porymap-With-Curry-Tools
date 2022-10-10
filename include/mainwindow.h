@@ -342,6 +342,7 @@ private slots:
     void on_actionImportToMap_triggered();
     void on_actionExportMapToAM_triggered();
     void on_actionChangeLanguage_triggered();
+    void on_actionReloadScripts_triggered();
 
 
 private:

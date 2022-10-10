@@ -3256,3 +3256,14 @@ void MainWindow::on_actionChangeLanguage_triggered()
     }
     initTilesetEditor();
 }
+
+void MainWindow::on_actionReloadScripts_triggered()
+{
+    for (auto action : this->registeredActions) {
+        this->ui->menuTools->removeAction(action);
+    }
+    registeredActions.clear();
+    porymapConfig.load();
+    Scripting::init(this);
+    Scripting::cb_ProjectOpened(editor->project->root);
+}

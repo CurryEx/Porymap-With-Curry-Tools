@@ -2639,6 +2639,7 @@
     </property>
     <addaction name="actionImportToMap"/>
     <addaction name="actionExportMapToAM"/>
+    <addaction name="actionReloadScripts"/>
     <addaction name="separator"/>
     <addaction name="actionChangeLanguage"/>
    </widget>
@@ -2954,6 +2955,11 @@
   <action name="actionChangeLanguage">
    <property name="text">
     <string>tools -&gt; 中文/English</string>
+   </property>
+  </action>
+  <action name="actionReloadScripts">
+   <property name="text">
+    <string>重新加载js脚本</string>
    </property>
   </action>
  </widget>

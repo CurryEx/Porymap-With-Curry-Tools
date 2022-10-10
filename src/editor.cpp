@@ -380,15 +380,15 @@ void Editor::deleteWildMonGroup() {
     if (msgBox.clickedButton() == deleteButton) {
         auto it = project->wildMonData.find(map->constantName);
         if (it == project->wildMonData.end()) {
-          logError(QString("Failed to find data for map %1. Unable to delete").arg(map->constantName));
-          return;
+            logError(QString("Failed to find data for map %1. Unable to delete").arg(map->constantName));
+            return;
         }
 
         int i = project->encounterGroupLabels.indexOf(labelCombo->currentText());
         if (i < 0) {
-          logError(QString("Failed to find selected wild mon group: %1. Unable to delete")
-                   .arg(labelCombo->currentText()));
-          return;
+            logError(QString("Failed to find selected wild mon group: %1. Unable to delete")
+                     .arg(labelCombo->currentText()));
+            return;
         }
 
         it.value().erase(labelCombo->currentText());
@@ -449,7 +449,7 @@ void Editor::configureEncounterJSON(QWidget *window) {
         totalLabel->setText(groupTotalMessage);
     };
 
-    // lambda: Create a new "slot", which is the widget containing a spinner and an index label. 
+    // lambda: Create a new "slot", which is the widget containing a spinner and an index label.
     //         Add the slot to a list of fieldSlots, which exists to keep track of them for memory management.
     auto createNewSlot = [&fieldSlots, &tempFields, &updateTotal](int index, EncounterField &currentField) {
         QLabel *indexLabel = new QLabel(QString("Index: %1").arg(QString::number(index)));
@@ -955,15 +955,15 @@ void Editor::onWheelZoom(int s) {
 
 const QList<double> zoomLevels = QList<double>
 {
-    0.5,
-    0.75,
-    1.0,
-    1.5,
-    2.0,
-    3.0,
-    4.0,
-    6.0,
-};
+        0.5,
+        0.75,
+        1.0,
+        1.5,
+        2.0,
+        3.0,
+        4.0,
+        6.0,
+        };
 
 void Editor::scaleMapView(int s) {
     // Clamp the scale index to a valid value.
@@ -1015,16 +1015,16 @@ void Editor::onHoveredMapMetatileChanged(const QPoint &pos) {
         int blockIndex = y * map->getWidth() + x;
         int metatileId = map->layout->blockdata.at(blockIndex).metatileId;
         this->ui->statusBar->showMessage(QString("X: %1, Y: %2, %3, Scale = %4x")
-                              .arg(x)
-                              .arg(y)
-                              .arg(getMetatileDisplayMessage(metatileId))
-                              .arg(QString::number(zoomLevels[this->scaleIndex], 'g', 2)));
+                                         .arg(x)
+                                         .arg(y)
+                                         .arg(getMetatileDisplayMessage(metatileId))
+                                         .arg(QString::number(zoomLevels[this->scaleIndex], 'g', 2)));
     }
     else if (map_item->paintingMode == MapPixmapItem::PaintMode::EventObjects) {
         this->ui->statusBar->showMessage(QString("X: %1, Y: %2, Scale = %3x")
-                              .arg(x)
-                              .arg(y)
-                              .arg(QString::number(zoomLevels[this->scaleIndex], 'g', 2)));
+                                         .arg(x)
+                                         .arg(y)
+                                         .arg(QString::number(zoomLevels[this->scaleIndex], 'g', 2)));
     }
     Scripting::cb_BlockHoverChanged(x, y);
 }
@@ -1032,7 +1032,7 @@ void Editor::onHoveredMapMetatileChanged(const QPoint &pos) {
 void Editor::onHoveredMapMetatileCleared() {
     this->setCursorRectVisible(false);
     if (map_item->paintingMode == MapPixmapItem::PaintMode::Metatiles
-     || map_item->paintingMode == MapPixmapItem::PaintMode::EventObjects) {
+            || map_item->paintingMode == MapPixmapItem::PaintMode::EventObjects) {
         this->ui->statusBar->clearMessage();
     }
     Scripting::cb_BlockHoverCleared();
@@ -1048,9 +1048,9 @@ void Editor::onHoveredMapMovementPermissionChanged(int x, int y) {
         uint16_t collision = map->layout->blockdata.at(blockIndex).collision;
         uint16_t elevation = map->layout->blockdata.at(blockIndex).elevation;
         QString message = QString("X: %1, Y: %2, %3")
-                            .arg(x)
-                            .arg(y)
-                            .arg(this->getMovementPermissionText(collision, elevation));
+                .arg(x)
+                .arg(y)
+                .arg(this->getMovementPermissionText(collision, elevation));
         this->ui->statusBar->showMessage(message);
     }
     Scripting::cb_BlockHoverChanged(x, y);
@@ -1380,10 +1380,10 @@ void Editor::displayMetatileSelector() {
     } else {
         metatile_selector_item->setMap(map);
         if (metatile_selector_item->primaryTileset
-         && metatile_selector_item->primaryTileset != map->layout->tileset_primary)
+                && metatile_selector_item->primaryTileset != map->layout->tileset_primary)
             emit tilesetUpdated(map->layout->tileset_primary->name);
         if (metatile_selector_item->secondaryTileset
-         && metatile_selector_item->secondaryTileset != map->layout->tileset_secondary)
+                && metatile_selector_item->secondaryTileset != map->layout->tileset_secondary)
             emit tilesetUpdated(map->layout->tileset_secondary->name);
         metatile_selector_item->setTilesets(map->layout->tileset_primary, map->layout->tileset_secondary);
     }
@@ -1405,11 +1405,11 @@ void Editor::displayMapMetatiles() {
     int tw = 16;
     int th = 16;
     scene->setSceneRect(
-        -BORDER_DISTANCE * tw,
-        -BORDER_DISTANCE * th,
-        map_item->pixmap().width() + BORDER_DISTANCE * 2 * tw,
-        map_item->pixmap().height() + BORDER_DISTANCE * 2 * th
-    );
+                -BORDER_DISTANCE * tw,
+                -BORDER_DISTANCE * th,
+                map_item->pixmap().width() + BORDER_DISTANCE * 2 * tw,
+                map_item->pixmap().height() + BORDER_DISTANCE * 2 * th
+                );
 }
 
 void Editor::displayMapMovementPermissions() {
@@ -1610,11 +1610,11 @@ void Editor::maskNonVisibleConnectionTiles() {
     QPainterPath mask;
     mask.addRect(scene->itemsBoundingRect().toRect());
     mask.addRect(
-        -BORDER_DISTANCE * 16,
-        -BORDER_DISTANCE * 16,
-        (map->getWidth() + BORDER_DISTANCE * 2) * 16,
-        (map->getHeight() + BORDER_DISTANCE * 2) * 16
-    );
+                -BORDER_DISTANCE * 16,
+                -BORDER_DISTANCE * 16,
+                (map->getWidth() + BORDER_DISTANCE * 2) * 16,
+                (map->getHeight() + BORDER_DISTANCE * 2) * 16
+                );
 
     // Mask the tiles with the current theme's background color.
     QPen pen(ui->graphicsView_Map->palette().color(QPalette::Active, QPalette::Base));
@@ -1638,14 +1638,14 @@ void Editor::displayMapBorder() {
     int borderVertDist = getBorderDrawDistance(borderHeight);
     QPixmap pixmap = map->renderBorder();
     for (int y = -borderVertDist; y < map->getHeight() + borderVertDist; y += borderHeight)
-    for (int x = -borderHorzDist; x < map->getWidth() + borderHorzDist; x += borderWidth) {
-        QGraphicsPixmapItem *item = new QGraphicsPixmapItem(pixmap);
-        item->setX(x * 16);
-        item->setY(y * 16);
-        item->setZValue(-2);
-        scene->addItem(item);
-        borderItems.append(item);
-    }
+        for (int x = -borderHorzDist; x < map->getWidth() + borderHorzDist; x += borderWidth) {
+            QGraphicsPixmapItem *item = new QGraphicsPixmapItem(pixmap);
+            item->setX(x * 16);
+            item->setY(y * 16);
+            item->setZValue(-2);
+            scene->addItem(item);
+            borderItems.append(item);
+        }
 }
 
 void Editor::updateMapBorder() {
@@ -1808,9 +1808,9 @@ void Editor::updateMirroredConnection(MapConnection* connection, QString origina
         return;
 
     static QMap<QString, QString> oppositeDirections = QMap<QString, QString>({
-        {"up", "down"}, {"right", "left"},
-        {"down", "up"}, {"left", "right"},
-        {"dive", "emerge"},{"emerge", "dive"}});
+                                                                                  {"up", "down"}, {"right", "left"},
+                                                                                  {"down", "up"}, {"left", "right"},
+                                                                                  {"dive", "emerge"},{"emerge", "dive"}});
     QString oppositeDirection = oppositeDirections.value(originalDirection);
 
     // Find the matching connection in the connected map.
@@ -2198,10 +2198,10 @@ void Editor::on_actionImportToMap_triggered() const
 
     //打开json文件
     QString filepath = QFileDialog::getOpenFileName(
-            nullptr,
-            tr("打开辅助json"),
-            this->project->root,
-            tr("辅助json (*.json)"));
+                nullptr,
+                tr("打开辅助json"),
+                this->project->root,
+                tr("辅助json (*.json)"));
     if (filepath.isEmpty())
     {
         return;
@@ -2259,7 +2259,7 @@ void Editor::on_actionImportToMap_triggered() const
     QSBx->setMaximum(999);
     QSBy->setMaximum(999);
     form.addRow(new QLabel(tr("要插入的图块宽高为 %1 x %2\n\n请输入插入坐标 若没有记录请返回后将鼠标放在地图上 在软件左下角查看")
-    .arg(width).arg(height)));
+                           .arg(width).arg(height)));
     form.addRow(new QLabel(tr("插入位置x")), QSBx);
     form.addRow(new QLabel(tr("插入位置y")), QSBy);
 
@@ -2291,8 +2291,16 @@ void Editor::on_actionImportToMap_triggered() const
                 if(sequenceArray.at(i * width + j).toInt() == -1)
                     continue;
                 progressDialog->setValue(i*width+j);
-                this->metatile_selector_item->select(sequenceArray.at(i * width + j).toInt());
-                this->map_item->paintNormal(x+j,y+i,true);
+
+                Block block;
+                if (!this->map->getBlock(x+j, y+i, &block)) {
+                    this->metatile_selector_item->select(sequenceArray.at(i * width + j).toInt());
+                    this->map_item->paintNormal(x+j,y+i,true);
+                }
+                this->map->setBlock(x+j, y+i, Block(sequenceArray.at(i * width + j).toInt(), block.collision, block.elevation));
+
+                //this->metatile_selector_item->select(sequenceArray.at(i * width + j).toInt());
+                //this->map_item->paintNormal(x+j,y+i,true);
             }
         }
         this->map_item->draw(true);
@@ -2374,8 +2382,8 @@ void Editor::on_actionExportMapToAM_triggered()
     auto *QSBt1 = new QSpinBox();
     QSBt0->setMinimum(0);
     QSBt1->setMinimum(0);
-    QSBt0->setMaximum(254);
-    QSBt1->setMaximum(254);
+    QSBt1->setMaximum(16777215);
+    QSBt1->setMaximum(16777215);
     form.addRow(new QLabel(tr("输入要使用的地图块编号，对应AM中的'使用的tilesets'")));
     form.addRow(new QLabel("Tileset 1"), QSBt0);
     form.addRow(new QLabel("Tileset 2"), QSBt1);
@@ -2408,11 +2416,10 @@ void Editor::on_actionExportMapToAM_triggered()
         data.append(static_cast<char>(b[1]));
         data.append(static_cast<char>(b[2]));
         data.append(static_cast<char>(b[3]));
-    }
 
-    //固定文件尾
-    switch (projectConfig.getBaseGameVersion())
-    {
+        //固定文件尾
+        switch (projectConfig.getBaseGameVersion())
+        {
         case pokeruby:
         case pokeemerald:
             //宝石边框宽高 16-17
@@ -2425,51 +2432,53 @@ void Editor::on_actionExportMapToAM_triggered()
             data.append(static_cast<char>('\x02'));
             data.append(static_cast<char>('\x02'));
             break;
-    }
+        }
 
-    //固定文件尾 18-19
-    data.append(static_cast<char>('\xc0'));
-    data.append(static_cast<char>('\x00'));
+        //固定文件尾 18-19
+        data.append(static_cast<char>('\xc0'));
+        data.append(static_cast<char>('\x00'));
 
-    //边框文件
-    if(projectConfig.getBaseGameVersion()==pokeruby||projectConfig.getBaseGameVersion()==pokeemerald)
-    {
-
-    }
-    else
-    {
-        auto borderFile = new QFile(this->project->root+"/"+this->map->layout->border_path);
-        if (!borderFile->open(QIODevice::ReadOnly))
+        //边框文件
+        if(projectConfig.getBaseGameVersion()==pokeruby||projectConfig.getBaseGameVersion()==pokeemerald)
         {
-            msgBox.setInformativeText(tr("border文件无法打开，检查porymap状态"));
+
+        }
+        else
+        {
+            auto borderFile = new QFile(this->project->root+"/"+this->map->layout->border_path);
+            if (!borderFile->open(QIODevice::ReadOnly))
+            {
+                msgBox.setInformativeText(tr("border文件无法打开，检查porymap状态"));
+                msgBox.exec();
+                return;
+            }
+            QByteArray borderData = borderFile->readAll();
+            data.append(borderData);
+            borderFile->close();
+        }
+
+        //地图块文件
+        auto blockFile = new QFile(this->project->root+"/"+this->map->layout->blockdata_path);
+        if (!blockFile->open(QIODevice::ReadOnly))
+        {
+            msgBox.setInformativeText(tr("block文件无法打开，检查porymap状态"));
             msgBox.exec();
             return;
         }
-        QByteArray borderData = borderFile->readAll();
-        data.append(borderData);
-        borderFile->close();
-    }
+        QByteArray blockData = blockFile->readAll();
+        data.append(blockData);
+        blockFile->close();
 
-    //地图块文件
-    auto blockFile = new QFile(this->project->root+"/"+this->map->layout->blockdata_path);
-    if (!blockFile->open(QIODevice::ReadOnly))
-    {
-        msgBox.setInformativeText(tr("block文件无法打开，检查porymap状态"));
+        //写入
+        mapFile->write(data);
+        mapFile->close();
+
+        //完成
+        msgBox.setText(tr("恭喜"));
+        msgBox.setInformativeText(tr("保存成功"));
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.setIcon(QMessageBox::Icon::Information);
         msgBox.exec();
-        return;
+
     }
-    QByteArray blockData = blockFile->readAll();
-    data.append(blockData);
-    blockFile->close();
-
-    //写入
-    mapFile->write(data);
-    mapFile->close();
-
-    //完成
-    msgBox.setText(tr("恭喜"));
-    msgBox.setInformativeText(tr("保存成功"));
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    msgBox.setIcon(QMessageBox::Icon::Information);
-    msgBox.exec();
 }

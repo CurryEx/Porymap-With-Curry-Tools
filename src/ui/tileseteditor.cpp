@@ -1274,6 +1274,7 @@ void TilesetEditor::on_actionImportImageToTiles_triggered()
     {
         msgBox.setInformativeText(tr("图片必须被索引到16色"));
         msgBox.exec();
+
         return;
     }
 
@@ -2198,18 +2199,23 @@ void TilesetEditor::on_actionExportCurrentPalttle_triggered()
         msgBox.exec();
     }
 
-    //提示用户
-    msgBox.setIcon(QMessageBox::Icon::Information);
-    msgBox.setText(tr("提示"));
-    msgBox.setInformativeText(tr("若导出的调色板不正确，请先选择需要导出的tile后再尝试导出。"));
-    msgBox.exec();
-    msgBox.setIcon(QMessageBox::Icon::Critical);
-    msgBox.setText(tr("失败"));
-
     //获取当前选择的tile
-    int selectedTileId = this->tileSelector->getSelectedTiles().at(0).tileId;
-    bool primary = selectedTileId < this->primaryTileset->tiles.count();
+    bool primary = this->paletteId < Project::getNumPalettesPrimary();
     auto target = primary?this->primaryTileset->palettes:this->secondaryTileset->palettes;
+
+    int emptyCount = 0;
+    for (auto each: target.at(this->paletteId))
+    {
+        QColor color = QColor(each);
+        if(color.red()==0 && color.green()==0&&color.blue()==0)
+        {
+            emptyCount++;
+        }
+    }
+    if(emptyCount==15)
+    {
+        target = primary?this->secondaryTileset->palettes:this->primaryTileset->palettes;
+    }
 
     //元数据数组
     QByteArray data;

@@ -944,307 +944,312 @@ input x y you want to insert, you can put your mouse in map and learn current co
         <translation>Tools by Curry</translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2655"/>
+        <location filename="forms/mainwindow.ui" line="2656"/>
         <source>Save All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2658"/>
+        <location filename="forms/mainwindow.ui" line="2659"/>
         <source>Ctrl+Shift+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2663"/>
+        <location filename="forms/mainwindow.ui" line="2664"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2666"/>
+        <location filename="forms/mainwindow.ui" line="2667"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2671"/>
+        <location filename="forms/mainwindow.ui" line="2672"/>
         <source>Open Project...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2674"/>
+        <location filename="forms/mainwindow.ui" line="2675"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2679"/>
+        <location filename="forms/mainwindow.ui" line="2680"/>
         <source>Reload Project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2684"/>
+        <location filename="forms/mainwindow.ui" line="2685"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2687"/>
+        <location filename="forms/mainwindow.ui" line="2688"/>
         <source>Ctrl+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2695"/>
+        <location filename="forms/mainwindow.ui" line="2696"/>
         <source>Show Wild Encounter Tables</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2703"/>
+        <location filename="forms/mainwindow.ui" line="2704"/>
         <source>Monitor Project Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2711"/>
+        <location filename="forms/mainwindow.ui" line="2712"/>
         <source>Use Poryscript</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2716"/>
+        <location filename="forms/mainwindow.ui" line="2717"/>
         <source>New Map...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2719"/>
+        <location filename="forms/mainwindow.ui" line="2720"/>
         <source>Ctrl+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2724"/>
+        <location filename="forms/mainwindow.ui" line="2725"/>
         <source>Export Map Image...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2729"/>
+        <location filename="forms/mainwindow.ui" line="2730"/>
         <source>Zoom In</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2732"/>
+        <location filename="forms/mainwindow.ui" line="2733"/>
         <source>Ctrl++</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2737"/>
+        <location filename="forms/mainwindow.ui" line="2738"/>
         <source>Zoom Out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2740"/>
+        <location filename="forms/mainwindow.ui" line="2741"/>
         <source>Ctrl+-</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2751"/>
+        <location filename="forms/mainwindow.ui" line="2752"/>
         <source>Cursor Icons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2754"/>
+        <location filename="forms/mainwindow.ui" line="2755"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use reticule-styled cursors with icon showing currently selected tool.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2759"/>
+        <location filename="forms/mainwindow.ui" line="2760"/>
         <source>Pencil</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2762"/>
+        <location filename="forms/mainwindow.ui" line="2763"/>
         <source>N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2767"/>
+        <location filename="forms/mainwindow.ui" line="2768"/>
         <source>Bucket Fill</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2770"/>
+        <location filename="forms/mainwindow.ui" line="2771"/>
         <source>B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2775"/>
+        <location filename="forms/mainwindow.ui" line="2776"/>
         <source>Eyedropper</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2778"/>
+        <location filename="forms/mainwindow.ui" line="2779"/>
         <source>E</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2783"/>
+        <location filename="forms/mainwindow.ui" line="2784"/>
         <source>Move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2786"/>
+        <location filename="forms/mainwindow.ui" line="2787"/>
         <source>M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2791"/>
+        <location filename="forms/mainwindow.ui" line="2792"/>
         <source>Map Shift</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2794"/>
+        <location filename="forms/mainwindow.ui" line="2795"/>
         <source>S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2799"/>
+        <location filename="forms/mainwindow.ui" line="2800"/>
         <source>Pointer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2802"/>
+        <location filename="forms/mainwindow.ui" line="2803"/>
         <source>P</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2807"/>
+        <location filename="forms/mainwindow.ui" line="2808"/>
         <source>Tileset Editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2810"/>
+        <location filename="forms/mainwindow.ui" line="2811"/>
         <source>Ctrl+T</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2822"/>
+        <location filename="forms/mainwindow.ui" line="2823"/>
         <source>Sort by &amp;Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2834"/>
+        <location filename="forms/mainwindow.ui" line="2835"/>
         <source>Sort by &amp;Group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2837"/>
+        <location filename="forms/mainwindow.ui" line="2838"/>
         <source>Sort by Group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2849"/>
+        <location filename="forms/mainwindow.ui" line="2850"/>
         <source>Sort by &amp;Layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2854"/>
+        <location filename="forms/mainwindow.ui" line="2855"/>
         <source>About Porymap...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2862"/>
+        <location filename="forms/mainwindow.ui" line="2863"/>
         <source>Player View Rectangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2865"/>
+        <location filename="forms/mainwindow.ui" line="2866"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show the player&apos;s view rectangle on the map based on the cursor&apos;s position.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2868"/>
+        <location filename="forms/mainwindow.ui" line="2869"/>
         <source>V</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2879"/>
+        <location filename="forms/mainwindow.ui" line="2880"/>
         <source>Cursor Tile Outline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2882"/>
+        <location filename="forms/mainwindow.ui" line="2883"/>
         <source>C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2887"/>
+        <location filename="forms/mainwindow.ui" line="2888"/>
         <source>Region Map Editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2890"/>
+        <location filename="forms/mainwindow.ui" line="2891"/>
         <source>Ctrl+M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2895"/>
+        <location filename="forms/mainwindow.ui" line="2896"/>
         <source>New Tileset...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2898"/>
+        <location filename="forms/mainwindow.ui" line="2899"/>
         <source>Ctrl+Shift+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2903"/>
+        <location filename="forms/mainwindow.ui" line="2904"/>
         <source>Export Map Stitch Image...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2908"/>
+        <location filename="forms/mainwindow.ui" line="2909"/>
         <source>Edit Preferences...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2911"/>
+        <location filename="forms/mainwindow.ui" line="2912"/>
         <source>Ctrl+,</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2916"/>
+        <location filename="forms/mainwindow.ui" line="2917"/>
         <source>Open Project in Text Editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2921"/>
+        <location filename="forms/mainwindow.ui" line="2922"/>
         <source>Edit Shortcuts...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2926"/>
+        <location filename="forms/mainwindow.ui" line="2927"/>
         <source>Export Map Timelapse Image...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2931"/>
+        <location filename="forms/mainwindow.ui" line="2932"/>
         <source>Open Log File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2936"/>
+        <location filename="forms/mainwindow.ui" line="2937"/>
         <source>Open Config Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2941"/>
+        <location filename="forms/mainwindow.ui" line="2942"/>
         <source>Import Map from Advance Map 1.92...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2946"/>
+        <location filename="forms/mainwindow.ui" line="2947"/>
         <source>导入Json到地图</source>
         <translation>Import auxiliary json</translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2956"/>
+        <location filename="forms/mainwindow.ui" line="2957"/>
         <source>tools -&gt; 中文/English</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="forms/mainwindow.ui" line="2951"/>
+        <location filename="forms/mainwindow.ui" line="2962"/>
+        <source>重新加载js脚本</source>
+        <translation type="unfinished">reload js scripts</translation>
+    </message>
+    <message>
+        <location filename="forms/mainwindow.ui" line="2952"/>
         <source>导出AM1.92地图</source>
         <translation>export AdvanceMap map</translation>
     </message>
@@ -1266,12 +1271,12 @@ input x y you want to insert, you can put your mouse in map and learn current co
     <message>
         <location filename="src/mainwindow.cpp" line="3223"/>
         <source>失败</source>
-        <translation type="unfinished">Failed</translation>
+        <translation>Failed</translation>
     </message>
     <message>
         <location filename="src/mainwindow.cpp" line="3227"/>
         <source>当前变更没有保存，请先保存。</source>
-        <translation type="unfinished">plz save changes first.</translation>
+        <translation>plz save changes first.</translation>
     </message>
 </context>
 <context>
@@ -1838,8 +1843,9 @@ input x y you want to insert, you can put your mouse in map and learn current co
     </message>
     <message>
         <location filename="src/ui/paletteeditor.cpp" line="357"/>
-        <source>色斑长度不正确 请确认是新版ps导出的16色色板(应有22长度) 当前文件长度 %1</source>
-        <translation>length of palette file not correct, new version palette can be regarded as 22 colors.
+        <source>调色板长度不正确 请确认是新版ps导出的16色色板(应有22长度) 当前文件长度 %1</source>
+        <oldsource>色斑长度不正确 请确认是新版ps导出的16色色板(应有22长度) 当前文件长度 %1</oldsource>
+        <translation type="unfinished">length of palette file not correct, new version palette can be regarded as 22 colors.
 But selected file has %1 colors</translation>
     </message>
 </context>

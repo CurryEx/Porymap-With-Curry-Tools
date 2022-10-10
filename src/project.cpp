@@ -1469,6 +1469,21 @@ void Project::loadTilesetAssets(Tileset* tileset) {
     QRegularExpression re("([a-z])([A-Z0-9])");
     QString tilesetName = tileset->name;
     QString dir_path = root + "/data/tilesets/" + category + '/' + tilesetName.replace("gTileset_", "").replace(re, "\\1_\\2").toLower();
+    if(!QDir(dir_path).exists())
+    {
+        tilesetName = tileset->name;
+        dir_path = root + "/data/tilesets/" + category + '/' + tilesetName.replace("gTileset_", "").toLower();
+    }
+    if(!QDir(dir_path).exists())
+    {
+        tilesetName = tileset->name;
+        dir_path = root + "/data/tilesets/" + category + '/' + tilesetName.replace("gTileset_", "");
+    }
+    if(!QDir(dir_path).exists())
+    {
+        tilesetName = tileset->name;
+        dir_path = root + "/data/tilesets/" + category + '/' + tilesetName.replace("gTileset_", "").replace(re, "\\1_\\2").toLower();
+    }
 
     const QList<QStringList> graphics = parser.parseAsm("data/tilesets/graphics.inc");
     const QStringList tiles_values = parser.getLabelValues(graphics, tileset->tiles_label);
@@ -1483,13 +1498,12 @@ void Project::loadTilesetAssets(Tileset* tileset) {
             tiles_path += ".lz";
         }
     }
-
+    QString palettes_dir_path = dir_path + "/palettes";
     if (!palettes_values.isEmpty()) {
         for (const auto &value : palettes_values) {
             tileset->palettePaths.append(this->fixPalettePath(root + '/' + value.section('"', 1, 1)));
         }
     } else {
-        QString palettes_dir_path = dir_path + "/palettes";
         for (int i = 0; i < 16; i++) {
             tileset->palettePaths.append(palettes_dir_path + '/' + QString("%1").arg(i, 2, 10, QLatin1Char('0')) + ".pal");
         }
@@ -1559,6 +1573,18 @@ void Project::loadTilesetAssets(Tileset* tileset) {
 
         palettes.append(palette);
         palettePreviews.append(palette);
+    }
+
+    for(int i = tileset->palettePaths.length();i<Project::getNumPalettesTotal();i++)
+    {
+        QList<QRgb> palette;
+        for (int j = 0; j < 16; j++)
+        {
+            palette.append(qRgb(0, 0, 0));
+        }
+        palettes.append(palette);
+        palettePreviews.append(palette);
+        tileset->palettePaths.append(palettes_dir_path + '/' + QString("%1").arg(i, 2, 10, QLatin1Char('0')) + ".pal");
     }
     tileset->palettes = palettes;
     tileset->palettePreviews = palettePreviews;
