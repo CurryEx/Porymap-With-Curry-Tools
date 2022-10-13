@@ -47,3 +47,6 @@ author: @Curry
 - 新增 重新加载js脚本功能
 - 优化 json写入到地图速度
 - 修复 原版中读取tile调色板时 若新增了地图 然后修改源文件中调色板数量会导致的崩溃问题 project.cpp loadTilesetAssets
+
+### 1.0.2 beta
+- 合并 官方代码 fbe5427c0b0c35e0f6f169515721a36877f5fa6a 若出现问题 回退至1.0.1

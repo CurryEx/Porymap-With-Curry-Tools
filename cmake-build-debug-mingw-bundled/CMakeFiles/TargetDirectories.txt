@@ -1,5 +1,0 @@
-C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/CMakeFiles/porymap_master.dir
-C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/CMakeFiles/edit_cache.dir
-C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/CMakeFiles/rebuild_cache.dir
-C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/CMakeFiles/porymap_master_autogen_timestamp_deps.dir
-C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/CMakeFiles/porymap_master_autogen.dir
