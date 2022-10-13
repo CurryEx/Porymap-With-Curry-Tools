@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="label_Title">
       <property name="font">
        <font>
         <family>Segoe UI</family>
@@ -38,7 +38,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="label_3">
+     <widget class="QLabel" name="label_Version">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -60,7 +60,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="label_Description">
       <property name="font">
        <font>
         <family>Segoe UI</family>
@@ -75,7 +75,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="label_4">
+     <widget class="QLabel" name="label_Manual">
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Porymap Documentation: &lt;a href=&quot;https://huderlem.github.io/porymap/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://huderlem.github.io/porymap/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Curry tools Documentation: &lt;a href=&quot;https://github.com/CurryEx/Porymap-With-Curry-Tools&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/CurryEx/Porymap-With-Curry-Tools&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>

@@ -1258,6 +1258,104 @@
                      </item>
                     </layout>
                    </widget>
+                   <widget class="QWidget" name="tab_prefabs">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <attribute name="title">
+                     <string>Prefabs</string>
+                    </attribute>
+                    <layout class="QVBoxLayout" name="verticalLayout_3">
+                     <item>
+                      <widget class="QPushButton" name="pushButton_CreatePrefab">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="text">
+                        <string>Create from Selection</string>
+                       </property>
+                       <property name="icon">
+                        <iconset resource="../resources/images.qrc">
+                         <normaloff>:/icons/add.ico</normaloff>:/icons/add.ico</iconset>
+                       </property>
+                       <property name="autoDefault">
+                        <bool>false</bool>
+                       </property>
+                       <property name="default">
+                        <bool>false</bool>
+                       </property>
+                       <property name="flat">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QGroupBox" name="groupBox_3">
+                       <property name="title">
+                        <string>Prefabs for Map's Tilesets</string>
+                       </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_15">
+                        <item>
+                         <widget class="QScrollArea" name="scrollArea">
+                          <property name="frameShape">
+                           <enum>QFrame::NoFrame</enum>
+                          </property>
+                          <property name="widgetResizable">
+                           <bool>true</bool>
+                          </property>
+                          <widget class="QWidget" name="scrollAreaWidgetContents_Prefabs">
+                           <property name="geometry">
+                            <rect>
+                             <x>0</x>
+                             <y>0</y>
+                             <width>398</width>
+                             <height>631</height>
+                            </rect>
+                           </property>
+                           <layout class="QVBoxLayout" name="verticalLayout_14">
+                            <property name="leftMargin">
+                             <number>0</number>
+                            </property>
+                            <property name="topMargin">
+                             <number>0</number>
+                            </property>
+                            <property name="rightMargin">
+                             <number>0</number>
+                            </property>
+                            <property name="bottomMargin">
+                             <number>0</number>
+                            </property>
+                            <item>
+                             <widget class="QLabel" name="label_prefabHelp">
+                              <property name="text">
+                               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No prefabs have been created for the currently-used tilesets. Create some by using the button above!&lt;/p&gt;&lt;p&gt;Prefabs are &amp;quot;prefabricated&amp;quot; metatile selections that are used for easy selecting of complicated map structures. For example, a useful prefab could be a building or tree formation, which would otherwise be annoying to paint with the regular metatile picker.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                              </property>
+                              <property name="textFormat">
+                               <enum>Qt::RichText</enum>
+                              </property>
+                              <property name="alignment">
+                               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                              </property>
+                              <property name="wordWrap">
+                               <bool>true</bool>
+                              </property>
+                             </widget>
+                            </item>
+                           </layout>
+                          </widget>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
                   </widget>
                  </item>
                 </layout>
@@ -2629,6 +2727,7 @@
     <addaction name="actionUse_Encounter_Json"/>
     <addaction name="actionMonitor_Project_Files"/>
     <addaction name="actionUse_Poryscript"/>
+    <addaction name="actionOpen_Recent_Project_On_Launch"/>
     <addaction name="separator"/>
     <addaction name="actionEdit_Preferences"/>
     <addaction name="actionEdit_Shortcuts"/>
@@ -2710,6 +2809,14 @@
    </property>
    <property name="text">
     <string>Use Poryscript</string>
+   </property>
+  </action>
+  <action name="actionOpen_Recent_Project_On_Launch">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Open Recent Project On Launch</string>
    </property>
   </action>
   <action name="action_NewMap">

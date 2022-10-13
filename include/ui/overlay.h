@@ -76,6 +76,7 @@ public:
         this->y = 0;
         this->hidden = false;
         this->opacity = 1.0;
+        this->clippingRect = nullptr;
     }
     ~Overlay() {
         this->clearItems();
@@ -88,6 +89,8 @@ public:
     int getY();
     void setX(int x);
     void setY(int y);
+    void setClippingRect(QRectF rect);
+    void clearClippingRect();
     void setPosition(int x, int y);
     void move(int deltaX, int deltaY);
     void renderItems(QPainter *painter);
@@ -95,7 +98,7 @@ public:
     void clearItems();
     void addText(QString text, int x, int y, QString color = "#000000", int fontSize = 12);
     void addRect(int x, int y, int width, int height, QString color = "#000000", bool filled = false);
-    bool addImage(int x, int y, QString filepath, bool useCache = true, int width = -1, int height = -1, unsigned offset = 0, bool xflip = false, bool yflip = false, QList<QRgb> palette = QList<QRgb>(), bool setTransparency = false);
+    bool addImage(int x, int y, QString filepath, bool useCache = true, int width = -1, int height = -1, int xOffset = 0, int yOffset = 0, qreal hScale = 1, qreal vScale = 1, QList<QRgb> palette = QList<QRgb>(), bool setTransparency = false);
     bool addImage(int x, int y, QImage image);
 private:
     QList<OverlayItem*> items;
@@ -103,6 +106,7 @@ private:
     int y;
     bool hidden;
     qreal opacity;
+    QRectF *clippingRect;
 };
 
 #endif // OVERLAY_H

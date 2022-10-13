@@ -46,10 +46,13 @@ public:
     Q_INVOKABLE QJSValue getBlock(int x, int y);
     void tryRedrawMapArea(bool forceRedraw);
     void tryCommitMapChanges(bool commitChanges);
-    Q_INVOKABLE void setBlock(int x, int y, int tile, int collision, int elevation, bool forceRedraw = true, bool commitChanges = true);
+    Q_INVOKABLE void setBlock(int x, int y, int metatileId, int collision, int elevation, bool forceRedraw = true, bool commitChanges = true);
+    Q_INVOKABLE void setBlock(int x, int y, int rawValue, bool forceRedraw = true, bool commitChanges = true);
     Q_INVOKABLE void setBlocksFromSelection(int x, int y, bool forceRedraw = true, bool commitChanges = true);
     Q_INVOKABLE int getMetatileId(int x, int y);
     Q_INVOKABLE void setMetatileId(int x, int y, int metatileId, bool forceRedraw = true, bool commitChanges = true);
+    Q_INVOKABLE int getBorderMetatileId(int x, int y);
+    Q_INVOKABLE void setBorderMetatileId(int x, int y, int metatileId, bool forceRedraw = true, bool commitChanges = true);
     Q_INVOKABLE int getCollision(int x, int y);
     Q_INVOKABLE void setCollision(int x, int y, int collision, bool forceRedraw = true, bool commitChanges = true);
     Q_INVOKABLE int getElevation(int x, int y);
@@ -64,43 +67,15 @@ public:
     Q_INVOKABLE QJSValue getDimensions();
     Q_INVOKABLE int getWidth();
     Q_INVOKABLE int getHeight();
+    Q_INVOKABLE QJSValue getBorderDimensions();
+    Q_INVOKABLE int getBorderWidth();
+    Q_INVOKABLE int getBorderHeight();
     Q_INVOKABLE void setDimensions(int width, int height);
     Q_INVOKABLE void setWidth(int width);
     Q_INVOKABLE void setHeight(int height);
-    Q_INVOKABLE void clearOverlay(int layer = 0);
-    Q_INVOKABLE void clearOverlays();
-    Q_INVOKABLE void hideOverlay(int layer = 0);
-    Q_INVOKABLE void hideOverlays();
-    Q_INVOKABLE void showOverlay(int layer = 0);
-    Q_INVOKABLE void showOverlays();
-    Q_INVOKABLE bool getOverlayVisibility(int layer = 0);
-    Q_INVOKABLE void setOverlayVisibility(bool visible, int layer = 0);
-    Q_INVOKABLE void setOverlaysVisibility(bool visible);
-    Q_INVOKABLE int getOverlayX(int layer = 0);
-    Q_INVOKABLE int getOverlayY(int layer = 0);
-    Q_INVOKABLE void setOverlayX(int x, int layer = 0);
-    Q_INVOKABLE void setOverlayY(int y, int layer = 0);
-    Q_INVOKABLE void setOverlaysX(int x);
-    Q_INVOKABLE void setOverlaysY(int y);
-    Q_INVOKABLE QJSValue getOverlayPosition(int layer = 0);
-    Q_INVOKABLE void setOverlayPosition(int x, int y, int layer = 0);
-    Q_INVOKABLE void setOverlaysPosition(int x, int y);
-    Q_INVOKABLE void moveOverlay(int deltaX, int deltaY, int layer = 0);
-    Q_INVOKABLE void moveOverlays(int deltaX, int deltaY);
-    Q_INVOKABLE int getOverlayOpacity(int layer);
-    Q_INVOKABLE void setOverlayOpacity(int opacity, int layer = 0);
-    Q_INVOKABLE void setOverlaysOpacity(int opacity);
-    Q_INVOKABLE void addText(QString text, int x, int y, QString color = "#000000", int fontSize = 12, int layer = 0);
-    Q_INVOKABLE void addRect(int x, int y, int width, int height, QString color = "#000000", int layer = 0);
-    Q_INVOKABLE void addFilledRect(int x, int y, int width, int height, QString color = "#000000", int layer = 0);
-    Q_INVOKABLE void addImage(int x, int y, QString filepath, int layer = 0, bool useCache = true);
-    Q_INVOKABLE void createImage(int x, int y, QString filepath,
-                                 int width = -1, int height = -1, unsigned offset = 0,
-                                 bool xflip = false, bool yflip = false, int paletteId = -1, bool setTransparency = false,
-                                 int layer = 0, bool useCache = true);
-    Q_INVOKABLE void addTileImage(int x, int y, int tileId, bool xflip, bool yflip, int paletteId, bool setTransparency = false, int layer = 0);
-    Q_INVOKABLE void addTileImage(int x, int y, QJSValue tileObj, bool setTransparency = false, int layer = 0);
-    Q_INVOKABLE void addMetatileImage(int x, int y, int metatileId, bool setTransparency = false, int layer = 0);
+    Q_INVOKABLE void setBorderDimensions(int width, int height);
+    Q_INVOKABLE void setBorderWidth(int width);
+    Q_INVOKABLE void setBorderHeight(int height);
     void refreshAfterPaletteChange(Tileset *tileset);
     void setTilesetPalette(Tileset *tileset, int paletteIndex, QList<QList<int>> colors);
     Q_INVOKABLE void setPrimaryTilesetPalette(int paletteIndex, QList<QList<int>> colors);
@@ -124,35 +99,13 @@ public:
     Q_INVOKABLE QJSValue getSecondaryTilesetPalettePreview(int paletteIndex);
     Q_INVOKABLE QJSValue getSecondaryTilesetPalettesPreview();
     Q_INVOKABLE int getNumPrimaryTilesetMetatiles();
-    Q_INVOKABLE int getMaxPrimaryTilesetMetatiles();
     Q_INVOKABLE int getNumSecondaryTilesetMetatiles();
-    Q_INVOKABLE int getMaxSecondaryTilesetMetatiles();
     Q_INVOKABLE int getNumPrimaryTilesetTiles();
-    Q_INVOKABLE int getMaxPrimaryTilesetTiles();
     Q_INVOKABLE int getNumSecondaryTilesetTiles();
-    Q_INVOKABLE int getMaxSecondaryTilesetTiles();
-    Q_INVOKABLE bool isPrimaryTileset(QString tilesetName);
-    Q_INVOKABLE bool isSecondaryTileset(QString tilesetName);
     Q_INVOKABLE QString getPrimaryTileset();
     Q_INVOKABLE QString getSecondaryTileset();
     Q_INVOKABLE void setPrimaryTileset(QString tileset);
     Q_INVOKABLE void setSecondaryTileset(QString tileset);
-    Q_INVOKABLE void setGridVisibility(bool visible);
-    Q_INVOKABLE bool getGridVisibility();
-    Q_INVOKABLE void setBorderVisibility(bool visible);
-    Q_INVOKABLE bool getBorderVisibility();
-    Q_INVOKABLE void setSmartPathsEnabled(bool visible);
-    Q_INVOKABLE bool getSmartPathsEnabled();
-    Q_INVOKABLE void registerAction(QString functionName, QString actionName, QString shortcut = "");
-    Q_INVOKABLE void setTimeout(QJSValue callback, int milliseconds);
-    void invokeCallback(QJSValue callback);
-    Q_INVOKABLE void log(QString message);
-    Q_INVOKABLE void warn(QString message);
-    Q_INVOKABLE void error(QString message);
-    Q_INVOKABLE QList<int> getMetatileLayerOrder();
-    Q_INVOKABLE void setMetatileLayerOrder(QList<int> order);
-    Q_INVOKABLE QList<float> getMetatileLayerOpacity();
-    Q_INVOKABLE void setMetatileLayerOpacity(QList<float> order);
     void saveMetatilesByMetatileId(int metatileId);
     void saveMetatileAttributesByMetatileId(int metatileId);
     Metatile * getMetatile(int metatileId);
@@ -166,6 +119,8 @@ public:
     Q_INVOKABLE void setMetatileTerrainType(int metatileId, int terrainType);
     Q_INVOKABLE int getMetatileBehavior(int metatileId);
     Q_INVOKABLE void setMetatileBehavior(int metatileId, int behavior);
+    Q_INVOKABLE int getMetatileAttributes(int metatileId);
+    Q_INVOKABLE void setMetatileAttributes(int metatileId, int attributes);
     Q_INVOKABLE QJSValue getMetatileTile(int metatileId, int tileIndex);
     Q_INVOKABLE void setMetatileTile(int metatileId, int tileIndex, int tileId, bool xflip, bool yflip, int palette, bool forceRedraw = true);
     Q_INVOKABLE void setMetatileTile(int metatileId, int tileIndex, QJSValue tileObj, bool forceRedraw = true);
@@ -174,15 +129,6 @@ public:
     Q_INVOKABLE void setMetatileTiles(int metatileId, QJSValue tilesObj, int tileStart = 0, int tileEnd = -1, bool forceRedraw = true);
     Q_INVOKABLE void setMetatileTiles(int metatileId, int tileId, bool xflip, bool yflip, int palette, int tileStart = 0, int tileEnd = -1, bool forceRedraw = true);
     Q_INVOKABLE QJSValue getTilePixels(int tileId);
-    Q_INVOKABLE int getNumTilesInMetatile();
-    Q_INVOKABLE int getNumMetatileLayers();
-    Q_INVOKABLE QString getBaseGameVersion();
-    Q_INVOKABLE QList<QString> getCustomScripts();
-    Q_INVOKABLE int getMainTab();
-    Q_INVOKABLE void setMainTab(int index);
-    Q_INVOKABLE int getMapViewTab();
-    Q_INVOKABLE void setMapViewTab(int index);
-    bool gameStringToBool(QString s);
     Q_INVOKABLE QString getSong();
     Q_INVOKABLE void setSong(QString song);
     Q_INVOKABLE QString getLocation();
@@ -206,6 +152,9 @@ public:
     Q_INVOKABLE int getFloorNumber();
     Q_INVOKABLE void setFloorNumber(int floorNumber);
 
+public slots:
+    void on_mainTabBar_tabBarClicked(int index);
+    void on_mapViewTab_tabBarClicked(int index);
 
 private slots:
     void on_action_Open_Project_triggered();
@@ -250,10 +199,8 @@ private slots:
     void on_actionUse_Encounter_Json_triggered(bool checked);
     void on_actionMonitor_Project_Files_triggered(bool checked);
     void on_actionUse_Poryscript_triggered(bool checked);
+    void on_actionOpen_Recent_Project_On_Launch_triggered(bool checked);
     void on_actionEdit_Shortcuts_triggered();
-
-    void on_mainTabBar_tabBarClicked(int index);
-    void on_mapViewTab_tabBarClicked(int index);
 
     void on_actionZoom_In_triggered();
     void on_actionZoom_Out_triggered();
@@ -333,6 +280,7 @@ private slots:
     void on_pushButton_NewWildMonGroup_clicked();
     void on_pushButton_DeleteWildMonGroup_clicked();
     void on_pushButton_ConfigureEncountersJSON_clicked();
+    void on_pushButton_CreatePrefab_clicked();
 
     void on_actionRegion_Map_Editor_triggered();
     void on_actionEdit_Preferences_triggered();
@@ -344,21 +292,22 @@ private slots:
     void on_actionChangeLanguage_triggered();
     void on_actionReloadScripts_triggered();
 
+public:
+    Ui::MainWindow *ui;
+    Editor *editor = nullptr;
 
 private:
-    Ui::MainWindow *ui;
     QLabel *label_MapRulerStatus = nullptr;
     QPointer<TilesetEditor> tilesetEditor = nullptr;
     QPointer<RegionMapEditor> regionMapEditor = nullptr;
     QPointer<ShortcutsEditor> shortcutsEditor = nullptr;
     QPointer<MapImageExporter> mapImageExporter = nullptr;
-    QPointer<NewMapPopup> newmapprompt = nullptr;
+    QPointer<NewMapPopup> newMapPrompt = nullptr;
     QPointer<PreferenceEditor> preferenceEditor = nullptr;
     FilterChildrenProxyModel *mapListProxyModel;
     QStandardItemModel *mapListModel;
     QList<QStandardItem*> *mapGroupItemsList;
     QMap<QString, QModelIndex> mapListIndexes;
-    Editor *editor = nullptr;
     QIcon* mapIcon;
     QIcon* mapEditedIcon;
     QIcon* mapOpenedIcon;
@@ -382,7 +331,6 @@ private:
     DraggablePixmapItem *selectedBG;
     DraggablePixmapItem *selectedHealspot;
 
-    QList<QAction *> registeredActions;
     QVector<QToolButton *> openScriptButtons;
 
     bool isProgrammaticEventTabChange;
@@ -425,6 +373,7 @@ private:
     void initShortcuts();
     void initExtraShortcuts();
     void setProjectSpecificUIVisibility();
+    void setWildEncountersUIEnabled(bool enabled);
     void loadUserSettings();
     void applyMapListFilter(QString filterText);
     void restoreWindowState();

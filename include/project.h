@@ -9,6 +9,7 @@
 #include "wildmoninfo.h"
 #include "parseutil.h"
 #include "orderedjson.h"
+#include "regionmap.h"
 
 #include <QStringList>
 #include <QList>
@@ -80,6 +81,7 @@ public:
     ParseUtil parser;
     QFileSystemWatcher fileWatcher;
     QMap<QString, qint64> modifiedFileTimestamps;
+    bool usingAsmTilesets;
 
     void set_root(QString);
 
@@ -104,7 +106,7 @@ public:
     Tileset* loadTileset(QString, Tileset *tileset = nullptr);
     Tileset* getTileset(QString, bool forceLoad = false);
     QMap<QString, QStringList> tilesetLabels;
-    QList<QString> tilesetLabelsOrdered;
+    QStringList tilesetLabelsOrdered;
 
     Blockdata readBlockdata(QString);
     bool loadBlockdata(MapLayout*);
@@ -142,6 +144,8 @@ public:
     void loadTilesetTiles(Tileset*, QImage);
     void loadTilesetMetatiles(Tileset*);
     void loadTilesetMetatileLabels(Tileset*);
+    void loadTilesetPalettes(Tileset*);
+    void readTilesetPaths(Tileset* tileset);
 
     void saveLayoutBlockdata(Map*);
     void saveLayoutBorder(Map*);
@@ -163,7 +167,9 @@ public:
 
     QString defaultSong;
     QStringList getVisibilities();
-    QMap<QString, QStringList> getTilesetLabels();
+    void insertTilesetLabel(QString label, bool isSecondary);
+    void insertTilesetLabel(QString label, QString isSecondaryStr);
+    bool readTilesetLabels();
     bool readTilesetProperties();
     bool readMaxMapDataSize();
     bool readRegionMapSections();
@@ -186,6 +192,7 @@ public:
     bool readObjEventGfxConstants();
     bool readSongNames();
     bool readEventGraphics();
+    QMap<QString, QMap<QString, QString>> readObjEventGfxInfo();
 
     void setEventPixmap(Event * event, bool forceLoad = false);
 
@@ -244,6 +251,7 @@ signals:
     void reloadProject();
     void uncheckMonitorFilesAction();
     void mapCacheCleared();
+    void disableWildEncountersUI();
 };
 
 #endif // PROJECT_H

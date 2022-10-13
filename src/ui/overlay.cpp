@@ -26,9 +26,20 @@ void OverlayImage::render(QPainter *painter, int x, int y) {
 void Overlay::renderItems(QPainter *painter) {
     if (this->hidden) return;
 
+    if (this->clippingRect) {
+        painter->setClipping(true);
+        painter->setClipRect(*this->clippingRect);
+    }
+
+    qreal oldOpacity = painter->opacity();
     painter->setOpacity(this->opacity);
     for (auto item : this->items)
         item->render(painter, this->x, this->y);
+    painter->setOpacity(oldOpacity);
+
+    if (this->clippingRect) {
+        painter->setClipping(false);
+    }
 }
 
 void Overlay::clearItems() {
@@ -78,6 +89,20 @@ void Overlay::setY(int y) {
     this->y = y;
 }
 
+void Overlay::setClippingRect(QRectF rect) {
+    if (this->clippingRect) {
+        delete this->clippingRect;
+    }
+    this->clippingRect = new QRectF(rect);
+}
+
+void Overlay::clearClippingRect() {
+    if (this->clippingRect) {
+        delete this->clippingRect;
+    }
+    this->clippingRect = nullptr;
+}
+
 void Overlay::setPosition(int x, int y) {
     this->x = x;
     this->y = y;
@@ -96,7 +121,7 @@ void Overlay::addRect(int x, int y, int width, int height, QString color, bool f
     this->items.append(new OverlayRect(x, y, width, height, QColor(color), filled));
 }
 
-bool Overlay::addImage(int x, int y, QString filepath, bool useCache, int width, int height, unsigned offset, bool xflip, bool yflip, QList<QRgb> palette, bool setTransparency) {
+bool Overlay::addImage(int x, int y, QString filepath, bool useCache, int width, int height, int xOffset, int yOffset, qreal hScale, qreal vScale, QList<QRgb> palette, bool setTransparency) {
     QImage image = useCache ? Scripting::getImage(filepath) : QImage(filepath);
     if (image.isNull()) {
         logError(QString("Failed to load image '%1'").arg(filepath));
@@ -106,26 +131,31 @@ bool Overlay::addImage(int x, int y, QString filepath, bool useCache, int width,
     int fullWidth = image.width();
     int fullHeight = image.height();
 
+    // Negative values used as an indicator for "use full dimension"
     if (width <= 0)
         width = fullWidth;
     if (height <= 0)
         height = fullHeight;
 
-    if ((unsigned)(width * height) + offset > (unsigned)(fullWidth * fullHeight)) {
-        logError(QString("%1x%2 image starting at offset %3 exceeds the image size for '%4'")
+    if (xOffset < 0) xOffset = 0;
+    if (yOffset < 0) yOffset = 0;
+
+    if (width + xOffset > fullWidth || height + yOffset > fullHeight) {
+        logError(QString("%1x%2 image starting at (%3,%4) exceeds the image size for '%5'")
                  .arg(width)
                  .arg(height)
-                 .arg(offset)
+                 .arg(xOffset)
+                 .arg(yOffset)
                  .arg(filepath));
         return false;
     }
 
     // Get specified subset of image
     if (width != fullWidth || height != fullHeight)
-        image = image.copy(offset % fullWidth, offset / fullWidth, width, height);
+        image = image.copy(xOffset, yOffset, width, height);
 
-    if (xflip || yflip)
-        image = image.transformed(QTransform().scale(xflip ? -1 : 1, yflip ? -1 : 1));
+    if (hScale != 1 || vScale != 1)
+        image = image.transformed(QTransform().scale(hScale, vScale));
 
     for (int i = 0; i < palette.size(); i++)
         image.setColor(i, palette.at(i));

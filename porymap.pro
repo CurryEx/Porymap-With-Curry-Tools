@@ -12,7 +12,7 @@ TARGET = porymap
 TEMPLATE = app
 RC_ICONS = resources/icons/porymap-icon-2.ico
 ICON = resources/icons/porymap.icns
-QMAKE_CXXFLAGS += -std=c++11 -Wall
+QMAKE_CXXFLAGS += -std=c++17 -Wall
 QMAKE_TARGET_BUNDLE_PREFIX = com.pret
 
 SOURCES += src/core/block.cpp \
@@ -32,8 +32,15 @@ SOURCES += src/core/block.cpp \
     src/core/regionmap.cpp \
     src/core/wildmoninfo.cpp \
     src/core/editcommands.cpp \
+    src/lib/fex/lexer.cpp \
+    src/lib/fex/parser.cpp \
+    src/lib/fex/parser_util.cpp \
     src/lib/orderedjson.cpp \
-    src/mainwindow_scriptapi.cpp \
+    src/core/regionmapeditcommands.cpp \
+    src/scriptapi/apimap.cpp \
+    src/scriptapi/apioverlay.cpp \
+    src/scriptapi/apiutility.cpp \
+    src/scriptapi/scripting.cpp \
     src/ui/aboutporymap.cpp \
     src/ui/draggablepixmapitem.cpp \
     src/ui/bordermetatilespixmapitem.cpp \
@@ -41,6 +48,7 @@ SOURCES += src/core/block.cpp \
     src/ui/connectionpixmapitem.cpp \
     src/ui/currentselectedmetatilespixmapitem.cpp \
     src/ui/overlay.cpp \
+    src/ui/prefab.cpp \
     src/ui/regionmaplayoutpixmapitem.cpp \
     src/ui/regionmapentriespixmapitem.cpp \
     src/ui/cursortilerect.cpp \
@@ -50,6 +58,7 @@ SOURCES += src/core/block.cpp \
     src/ui/graphicsview.cpp \
     src/ui/imageproviders.cpp \
     src/ui/mappixmapitem.cpp \
+    src/ui/prefabcreationdialog.cpp \
     src/ui/regionmappixmapitem.cpp \
     src/ui/citymappixmapitem.cpp \
     src/ui/mapsceneeventfilter.cpp \
@@ -76,13 +85,15 @@ SOURCES += src/core/block.cpp \
     src/ui/shortcut.cpp \
     src/ui/shortcutseditor.cpp \
     src/ui/multikeyedit.cpp \
+    src/ui/prefabframe.cpp \
     src/ui/preferenceeditor.cpp \
+    src/ui/regionmappropertiesdialog.cpp \
+    src/ui/colorpicker.cpp \
     src/config.cpp \
     src/editor.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/project.cpp \
-    src/scripting.cpp \
     src/settings.cpp \
     src/log.cpp
 
@@ -105,6 +116,13 @@ HEADERS  += include/core/block.h \
     include/core/regionmap.h \
     include/core/wildmoninfo.h \
     include/core/editcommands.h \
+    include/core/regionmapeditcommands.h \
+    include/lib/fex/array.h \
+    include/lib/fex/array_value.h \
+    include/lib/fex/define_statement.h \
+    include/lib/fex/lexer.h \
+    include/lib/fex/parser.h \
+    include/lib/fex/parser_util.h \
     include/lib/orderedmap.h \
     include/lib/orderedjson.h \
     include/ui/aboutporymap.h \
@@ -113,6 +131,7 @@ HEADERS  += include/core/block.h \
     include/ui/collisionpixmapitem.h \
     include/ui/connectionpixmapitem.h \
     include/ui/currentselectedmetatilespixmapitem.h \
+    include/ui/prefabframe.h \
     include/ui/regionmaplayoutpixmapitem.h \
     include/ui/regionmapentriespixmapitem.h \
     include/ui/cursortilerect.h \
@@ -122,6 +141,8 @@ HEADERS  += include/core/block.h \
     include/ui/graphicsview.h \
     include/ui/imageproviders.h \
     include/ui/mappixmapitem.h \
+    include/ui/mapview.h \
+    include/ui/prefabcreationdialog.h \
     include/ui/regionmappixmapitem.h \
     include/ui/citymappixmapitem.h \
     include/ui/mapsceneeventfilter.h \
@@ -150,17 +171,23 @@ HEADERS  += include/core/block.h \
     include/ui/shortcut.h \
     include/ui/shortcutseditor.h \
     include/ui/multikeyedit.h \
+    include/ui/prefab.h \
     include/ui/preferenceeditor.h \
+    include/ui/regionmappropertiesdialog.h \
+    include/ui/colorpicker.h \
     include/config.h \
     include/editor.h \
     include/mainwindow.h \
     include/project.h \
     include/scripting.h \
+    include/scriptutility.h \
     include/settings.h \
     include/log.h
 
 FORMS    += forms/mainwindow.ui \
     forms/eventpropertiesframe.ui \
+    forms/prefabcreationdialog.ui \
+    forms/prefabframe.ui \
     forms/tileseteditor.ui \
     forms/paletteeditor.ui \
     forms/regionmapeditor.ui \
@@ -169,11 +196,14 @@ FORMS    += forms/mainwindow.ui \
     forms/newtilesetdialog.ui \
     forms/mapimageexporter.ui \
     forms/shortcutseditor.ui \
-    forms/preferenceeditor.ui
+    forms/preferenceeditor.ui \
+    forms/regionmappropertiesdialog.ui \
+    forms/colorpicker.ui
 
 RESOURCES += \
     resources/images.qrc \
-    resources/themes.qrc
+    resources/themes.qrc \
+    resources/text.qrc
 
 TRANSLATIONS = cn.ts\
                en.ts

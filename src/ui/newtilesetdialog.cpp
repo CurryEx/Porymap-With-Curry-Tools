@@ -35,6 +35,6 @@ void NewTilesetDialog::NameOrSecondaryChanged() {
     this->friendlyName = this->ui->nameLineEdit->text();
     this->fullSymbolName = "gTileset_" + this->friendlyName;
     this->ui->symbolNameLineEdit->setText(this->fullSymbolName);
-    this->path = QString("/data/tilesets/") + (this->isSecondary ? "secondary/" : "primary/") + this->friendlyName.toLower();
+    this->path = Tileset::getExpectedDir(this->fullSymbolName, this->isSecondary);
     this->ui->pathLineEdit->setText(this->path);
 }

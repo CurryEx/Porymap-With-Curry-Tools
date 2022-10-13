@@ -13,9 +13,11 @@ public:
     void draw();
     bool select(uint16_t metatileId);
     void setTilesets(Tileset*, Tileset*, bool draw = true);
-    uint16_t getSelectedMetatile();
+    uint16_t getSelectedMetatileId();
     void updateSelectedMetatile();
     QPoint getMetatileIdCoordsOnWidget(uint16_t metatileId);
+    QImage buildPrimaryMetatilesImage();
+    QImage buildSecondaryMetatilesImage();
 
     QVector<uint16_t> usedMetatiles;
     bool selectorShowUnused = false;
@@ -40,6 +42,8 @@ private:
     void drawFilters();
     void drawUnused();
     void drawCounts();
+    QImage buildAllMetatilesImage();
+    QImage buildImage(int metatileIdStart, int numMetatiles);
 
 signals:
     void hoveredMetatileChanged(uint16_t);

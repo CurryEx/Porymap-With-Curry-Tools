@@ -109,9 +109,8 @@ void NewMapPopup::useLayout(QString layoutId) {
 void NewMapPopup::setDefaultValues(int groupNum, QString mapSec) {
     ui->lineEdit_NewMap_Name->setText(project->getNewMapName());
 
-    QMap<QString, QStringList> tilesets = project->getTilesetLabels();
-    ui->comboBox_NewMap_Primary_Tileset->addItems(tilesets.value("primary"));
-    ui->comboBox_NewMap_Secondary_Tileset->addItems(tilesets.value("secondary"));
+    ui->comboBox_NewMap_Primary_Tileset->addItems(project->tilesetLabels.value("primary"));
+    ui->comboBox_NewMap_Secondary_Tileset->addItems(project->tilesetLabels.value("secondary"));
 
     ui->comboBox_NewMap_Group->addItems(project->groupNames);
     ui->comboBox_NewMap_Group->setCurrentText(project->groupNames.at(groupNum));
@@ -149,12 +148,13 @@ void NewMapPopup::setDefaultValues(int groupNum, QString mapSec) {
 void NewMapPopup::setDefaultValuesImportMap(MapLayout *mapLayout) {
     ui->lineEdit_NewMap_Name->setText(project->getNewMapName());
 
-    QMap<QString, QStringList> tilesets = project->getTilesetLabels();
-    ui->comboBox_NewMap_Primary_Tileset->addItems(tilesets.value("primary"));
-    ui->comboBox_NewMap_Secondary_Tileset->addItems(tilesets.value("secondary"));
+    ui->comboBox_NewMap_Primary_Tileset->addItems(project->tilesetLabels.value("primary"));
+    ui->comboBox_NewMap_Secondary_Tileset->addItems(project->tilesetLabels.value("secondary"));
 
     ui->comboBox_NewMap_Group->addItems(project->groupNames);
     ui->comboBox_NewMap_Group->setCurrentText(project->groupNames.at(0));
+
+    ui->comboBox_Song->addItems(project->songNames);
 
     ui->spinBox_NewMap_Width->setValue(mapLayout->width.toInt(nullptr, 0));
     ui->spinBox_NewMap_Height->setValue(mapLayout->height.toInt(nullptr, 0));
@@ -289,8 +289,9 @@ void NewMapPopup::on_pushButton_NewMap_Accept_clicked() {
         }
         layout->tileset_primary_label = this->ui->comboBox_NewMap_Primary_Tileset->currentText();
         layout->tileset_secondary_label = this->ui->comboBox_NewMap_Secondary_Tileset->currentText();
-        layout->border_path = QString("data/layouts/%1/border.bin").arg(newMapName);
-        layout->blockdata_path = QString("data/layouts/%1/map.bin").arg(newMapName);
+        QString basePath = projectConfig.getFilePath(ProjectFilePath::data_layouts_folders);
+        layout->border_path = QString("%1%2/border.bin").arg(basePath, newMapName);
+        layout->blockdata_path = QString("%1%2/map.bin").arg(basePath, newMapName);
     }
 
     if (this->importedMap) {
