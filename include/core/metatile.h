@@ -36,6 +36,7 @@ public:
     Metatile();
     Metatile(const Metatile &other) = default;
     Metatile &operator=(const Metatile &other) = default;
+    Metatile(const int numTiles);
 
 public:
     QList<Tile> tiles;
@@ -53,5 +54,19 @@ public:
     static QPoint coordFromPixmapCoord(const QPointF &pixelCoord);
     static int getAttributesSize(BaseGameVersion version);
 };
+
+inline bool operator==(const Metatile &a, const Metatile &b) {
+    return a.behavior         == b.behavior &&
+           a.layerType        == b.layerType &&
+           a.encounterType    == b.encounterType &&
+           a.terrainType      == b.terrainType &&
+           a.unusedAttributes == b.unusedAttributes &&
+           a.label            == b.label &&
+           a.tiles            == b.tiles;
+}
+
+inline bool operator!=(const Metatile &a, const Metatile &b) {
+    return !(operator==(a, b));
+}
 
 #endif // METATILE_H

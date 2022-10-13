@@ -48,8 +48,10 @@ public:
     QStringList readCArray(const QString &text, const QString &label);
     QMap<QString, QString> readNamedIndexCArray(const QString &text, const QString &label);
     QString readCIncbin(const QString &text, const QString &label);
+    QStringList readCIncbinArray(const QString &filename, const QString &label);
     QMap<QString, int> readCDefines(const QString &filename, const QStringList &prefixes, QMap<QString, int> = { });
     QStringList readCDefinesSorted(const QString&, const QStringList&, const QMap<QString, int>& = { });
+    QMap<QString, QHash<QString, QString>> readCStructs(const QString &, const QString & = "", const QHash<int, QString> = { });
     QList<QStringList> getLabelMacros(const QList<QStringList>&, const QString&);
     QStringList getLabelValues(const QList<QStringList>&, const QString&);
     bool tryParseJsonFile(QJsonDocument *out, const QString &filepath);
@@ -69,15 +71,21 @@ public:
     static QString removeLineComments(QString text, const QStringList &commentSymbols);
 
     static QStringList splitShellCommand(QStringView command);
+    static bool gameStringToBool(QString gameString, bool * ok = nullptr);
 
 private:
     QString root;
     QString text;
     QString file;
+    QString curDefine;
+    QHash<QString, QStringList> errorMap;
     QList<Token> tokenizeExpression(QString expression, const QMap<QString, int> &knownIdentifiers);
     QList<Token> generatePostfix(const QList<Token> &tokens);
     int evaluatePostfix(const QList<Token> &postfix);
-    void error(const QString &message, const QString &expression);
+    void recordError(const QString &message);
+    void recordErrors(const QStringList &errors);
+    void logRecordedErrors();
+    QString createErrorMessage(const QString &message, const QString &expression);
 
     static const QRegularExpression re_incScriptLabel;
     static const QRegularExpression re_globalIncScriptLabel;

@@ -6,6 +6,9 @@
 #include <QJsonObject>
 #include <QStack>
 
+#include "lib/fex/lexer.h"
+#include "lib/fex/parser.h"
+
 const QRegularExpression ParseUtil::re_incScriptLabel("\\b(?<label>[\\w_][\\w\\d_]*):{1,2}");
 const QRegularExpression ParseUtil::re_globalIncScriptLabel("\\b(?<label>[\\w_][\\w\\d_]*)::");
 const QRegularExpression ParseUtil::re_poryScriptLabel("\\b(script)(\\((global|local)\\))?\\s*\\b(?<label>[\\w_][\\w\\d_]*)");
@@ -16,15 +19,33 @@ void ParseUtil::set_root(const QString &dir) {
     this->root = dir;
 }
 
-void ParseUtil::error(const QString &message, const QString &expression) {
-    QStringList lines = text.split(QRegularExpression("[\r\n]"));
+void ParseUtil::recordError(const QString &message) {
+    this->errorMap[this->curDefine].append(message);
+}
+
+void ParseUtil::recordErrors(const QStringList &errors) {
+    if (errors.isEmpty()) return;
+    this->errorMap[this->curDefine].append(errors);
+}
+
+void ParseUtil::logRecordedErrors() {
+    QStringList errors = this->errorMap.value(this->curDefine);
+    if (errors.isEmpty()) return;
+    QString message = QString("Failed to parse '%1':").arg(this->curDefine);
+    for (const auto error : errors)
+        message.append(QString("\n%1").arg(error));
+    logError(message);
+}
+
+QString ParseUtil::createErrorMessage(const QString &message, const QString &expression) {
+    QStringList lines = this->text.split(QRegularExpression("[\r\n]"));
     int lineNum = 0, colNum = 0;
     for (QString line : lines) {
         lineNum++;
         colNum = line.indexOf(expression) + 1;
         if (colNum) break;
     }
-    logError(QString("%1:%2:%3: %4").arg(file).arg(lineNum).arg(colNum).arg(message));
+    return QString("%1:%2:%3: %4").arg(this->file).arg(lineNum).arg(colNum).arg(message);
 }
 
 QString ParseUtil::readTextFile(const QString &path) {
@@ -34,6 +55,9 @@ QString ParseUtil::readTextFile(const QString &path) {
         return QString();
     }
     QTextStream in(&file);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    in.setCodec("UTF-8");
+#endif // Qt6 defaults to UTF-8, but setCodec is renamed to setEncoding
     QString text = "";
     while (!in.atEnd()) {
         text += in.readLine() + '\n';
@@ -49,8 +73,8 @@ int ParseUtil::textFileLineCount(const QString &path) {
 QList<QStringList> ParseUtil::parseAsm(const QString &filename) {
     QList<QStringList> parsed;
 
-    text = readTextFile(root + '/' + filename);
-    const QStringList lines = removeLineComments(text, "@").split('\n');
+    this->text = readTextFile(this->root + '/' + filename);
+    const QStringList lines = removeLineComments(this->text, "@").split('\n');
     for (const auto &line : lines) {
         const QString trimmedLine = line.trimmed();
         if (trimmedLine.isEmpty()) {
@@ -98,6 +122,8 @@ QList<Token> ParseUtil::tokenizeExpression(QString expression, const QMap<QStrin
             if (!token.isEmpty()) {
                 if (tokenType == "identifier") {
                     if (knownIdentifiers.contains(token)) {
+                        // Any errors encountered when this identifier was evaluated should be recorded for this expression as well.
+                        recordErrors(this->errorMap.value(token));
                         QString actualToken = QString("%1").arg(knownIdentifiers.value(token));
                         expression = expression.replace(0, token.length(), actualToken);
                         token = actualToken;
@@ -106,14 +132,14 @@ QList<Token> ParseUtil::tokenizeExpression(QString expression, const QMap<QStrin
                         tokenType = "error";
                         QString message = QString("unknown token '%1' found in expression '%2'")
                                           .arg(token).arg(expression);
-                        error(message, expression);
+                        recordError(createErrorMessage(message, expression));
                     }
                 }
                 else if (tokenType == "operator") {
                     if (!Token::precedenceMap.contains(token)) {
                         QString message = QString("unsupported postfix operator: '%1'")
                                           .arg(token);
-                        error(message, expression);
+                        recordError(createErrorMessage(message, expression));
                     }
                 }
 
@@ -158,7 +184,7 @@ QList<Token> ParseUtil::generatePostfix(const QList<Token> &tokens) {
                 // pop the left parenthesis token
                 operatorStack.pop();
             } else {
-                logError("Mismatched parentheses detected in expression!");
+                recordError("Mismatched parentheses detected in expression!");
             }
         } else {
             // token is an operator
@@ -173,7 +199,7 @@ QList<Token> ParseUtil::generatePostfix(const QList<Token> &tokens) {
 
     while (!operatorStack.isEmpty()) {
         if (operatorStack.top().value == "(" || operatorStack.top().value == ")") {
-            logError("Mismatched parentheses detected in expression!");
+            recordError("Mismatched parentheses detected in expression!");
         } else {
             output.append(operatorStack.pop());
         }
@@ -227,7 +253,7 @@ QString ParseUtil::readCIncbin(const QString &filename, const QString &label) {
         return path;
     }
 
-    text = readTextFile(root + "/" + filename);
+    this->text = readTextFile(this->root + "/" + filename);
 
     QRegularExpression re(QString(
         "\\b%1\\b"
@@ -236,12 +262,36 @@ QString ParseUtil::readCIncbin(const QString &filename, const QString &label) {
         "\\(\\s*\"([^\"]*)\"\\s*\\)").arg(label));
 
     QRegularExpressionMatch match;
-    qsizetype pos = text.indexOf(re, 0, &match);
+    qsizetype pos = this->text.indexOf(re, 0, &match);
     if (pos != -1) {
         path = match.captured(1);
     }
 
     return path;
+}
+
+QStringList ParseUtil::readCIncbinArray(const QString &filename, const QString &label) {
+    QStringList paths;
+
+    if (label.isNull()) {
+        return paths;
+    }
+
+    this->text = readTextFile(this->root + "/" + filename);
+
+    // Get the text starting after the label all the way to the definition's end
+    QRegularExpression re(QString("\\b%1\\b(.*?)};").arg(label), QRegularExpression::DotMatchesEverythingOption);
+    QRegularExpressionMatch arrayMatch = re.match(this->text);
+    if (!arrayMatch.hasMatch())
+        return paths;
+
+    // Extract incbin paths from the array
+    re.setPattern("INCBIN_[US][0-9][0-9]?\\(\\s*\"([^\"]*)\"\\s*\\)");
+    QRegularExpressionMatchIterator iter = re.globalMatch(arrayMatch.captured(1));
+    while (iter.hasNext()) {
+        paths.append(iter.next().captured(1));
+    }
+    return paths;
 }
 
 QMap<QString, int> ParseUtil::readCDefines(const QString &filename,
@@ -250,36 +300,40 @@ QMap<QString, int> ParseUtil::readCDefines(const QString &filename,
 {
     QMap<QString, int> filteredDefines;
 
-    file = filename;
+    this->file = filename;
 
-    if (file.isEmpty()) {
+    if (this->file.isEmpty()) {
         return filteredDefines;
     }
 
-    QString filepath = root + "/" + file;
-    text = readTextFile(filepath);
+    QString filepath = this->root + "/" + this->file;
+    this->text = readTextFile(filepath);
 
-    if (text.isNull()) {
+    if (this->text.isNull()) {
         logError(QString("Failed to read C defines file: '%1'").arg(filepath));
         return filteredDefines;
     }
 
-    text.replace(QRegularExpression("(//.*)|(\\/+\\*+[^*]*\\*+\\/+)"), "");
-    text.replace(QRegularExpression("(\\\\\\s+)"), "");
+    this->text.replace(QRegularExpression("(//.*)|(\\/+\\*+[^*]*\\*+\\/+)"), "");
+    this->text.replace(QRegularExpression("(\\\\\\s+)"), "");
     allDefines.insert("FALSE", 0);
     allDefines.insert("TRUE", 1);
 
     QRegularExpression re("#define\\s+(?<defineName>\\w+)[^\\S\\n]+(?<defineValue>.+)");
-    QRegularExpressionMatchIterator iter = re.globalMatch(text);
+    QRegularExpressionMatchIterator iter = re.globalMatch(this->text);
+    this->errorMap.clear();
     while (iter.hasNext()) {
         QRegularExpressionMatch match = iter.next();
         QString name = match.captured("defineName");
         QString expression = match.captured("defineValue");
         if (expression == " ") continue;
+        this->curDefine = name;
         int value = evaluateDefine(expression, allDefines);
         allDefines.insert(name, value);
         for (QString prefix : prefixes) {
             if (name.startsWith(prefix) || QRegularExpression(prefix).match(name).hasMatch()) {
+                // Only log errors for defines that Porymap is looking for
+                logRecordedErrors();
                 filteredDefines.insert(name, value);
             }
         }
@@ -293,7 +347,7 @@ QStringList ParseUtil::readCDefinesSorted(const QString &filename,
 {
     QMap<QString, int> defines = readCDefines(filename, prefixes, knownDefines);
 
-    // The defines should to be sorted by their underlying value, not alphabetically.
+    // The defines should be sorted by their underlying value, not alphabetically.
     // Reverse the map and read out the resulting keys in order.
     QMultiMap<int, QString> definesInverse;
     for (QString defineName : defines.keys()) {
@@ -309,11 +363,11 @@ QStringList ParseUtil::readCArray(const QString &filename, const QString &label)
         return list;
     }
 
-    file = filename;
-    text = readTextFile(root + "/" + filename);
+    this->file = filename;
+    this->text = readTextFile(this->root + "/" + filename);
 
     QRegularExpression re(QString(R"(\b%1\b\s*(\[?[^\]]*\])?\s*=\s*\{([^\}]*)\})").arg(label));
-    QRegularExpressionMatch match = re.match(text);
+    QRegularExpressionMatch match = re.match(this->text);
 
     if (match.hasMatch()) {
         QString body = match.captured(2);
@@ -329,11 +383,11 @@ QStringList ParseUtil::readCArray(const QString &filename, const QString &label)
 }
 
 QMap<QString, QString> ParseUtil::readNamedIndexCArray(const QString &filename, const QString &label) {
-    text = readTextFile(root + "/" + filename);
+    this->text = readTextFile(this->root + "/" + filename);
     QMap<QString, QString> map;
 
     QRegularExpression re_text(QString(R"(\b%1\b\s*(\[?[^\]]*\])?\s*=\s*\{([^\}]*)\})").arg(label));
-    QString body = re_text.match(text).captured(2).replace(QRegularExpression("\\s*"), "");
+    QString body = re_text.match(this->text).captured(2).replace(QRegularExpression("\\s*"), "");
 
     QRegularExpression re("\\[(?<index>[A-Za-z0-9_]*)\\]=(?<value>&?[A-Za-z0-9_]*)");
     QRegularExpressionMatchIterator iter = re.globalMatch(body);
@@ -346,6 +400,44 @@ QMap<QString, QString> ParseUtil::readNamedIndexCArray(const QString &filename, 
     }
 
     return map;
+}
+
+bool ParseUtil::gameStringToBool(QString gameString, bool * ok) {
+    if (ok) *ok = true;
+    if (QString::compare(gameString, "TRUE", Qt::CaseInsensitive) == 0)
+        return true;
+    if (QString::compare(gameString, "FALSE", Qt::CaseInsensitive) == 0)
+        return false;
+    return gameString.toInt(ok) != 0;
+}
+
+QMap<QString, QHash<QString, QString>> ParseUtil::readCStructs(const QString &filename, const QString &label, const QHash<int, QString> memberMap) {
+    QString filePath = this->root + "/" + filename;
+    auto cParser = fex::Parser();
+    auto tokens = fex::Lexer().LexFile(filePath.toStdString());
+    auto structs = cParser.ParseTopLevelObjects(tokens);
+    QMap<QString, QHash<QString, QString>> structMaps;
+    for (auto it = structs.begin(); it != structs.end(); it++) {
+        QString structLabel = QString::fromStdString(it->first);
+        if (structLabel.isEmpty()) continue;
+        if (!label.isEmpty() && label != structLabel) continue; // Speed up parsing if only looking for a particular symbol
+        QHash<QString, QString> values;
+        int i = 0;
+        for (const fex::ArrayValue &v : it->second.values()) {
+            if (v.type() == fex::ArrayValue::Type::kValuePair) {
+                QString key = QString::fromStdString(v.pair().first);
+                QString value = QString::fromStdString(v.pair().second->string_value());
+                values.insert(key, value);
+            } else {
+                // For compatibility with structs that don't specify member names.
+                if (memberMap.contains(i))
+                    values.insert(memberMap.value(i), QString::fromStdString(v.string_value()));
+            }
+            i++;
+        }
+        structMaps.insert(structLabel, values);
+    }
+    return structMaps;
 }
 
 QList<QStringList> ParseUtil::getLabelMacros(const QList<QStringList> &list, const QString &label) {

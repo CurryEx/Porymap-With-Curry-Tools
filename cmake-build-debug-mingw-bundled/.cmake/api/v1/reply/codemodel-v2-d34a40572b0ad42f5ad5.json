@@ -1,0 +1,78 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "porymap_master",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "porymap_master::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-porymap_master-Debug-e80096b19939efcb88e3.json",
+					"name" : "porymap_master",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "porymap_master_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-porymap_master_autogen-Debug-0fdfbdbac57c9c70e03d.json",
+					"name" : "porymap_master_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "porymap_master_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-porymap_master_autogen_timestamp_deps-Debug-36de06d835d46f696209.json",
+					"name" : "porymap_master_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled",
+		"source" : "C:/Workspace/QT/Porymap-With-Curry-Tools"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

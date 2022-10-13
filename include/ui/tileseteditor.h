@@ -41,7 +41,7 @@ public:
     void updateMap(Map *map);
     void updateTilesets(QString primaryTilsetLabel, QString secondaryTilesetLabel);
     bool selectMetatile(uint16_t metatileId);
-    uint16_t getSelectedMetatile();
+    uint16_t getSelectedMetatileId();
     void setMetatileLabel(QString label);
 
     QObjectList shortcutableObjects() const;
@@ -96,12 +96,18 @@ private slots:
     void on_comboBox_terrainType_activated(int arg1);
 
     void on_actionExport_Primary_Tiles_Image_triggered();
-
     void on_actionExport_Secondary_Tiles_Image_triggered();
+    void on_actionExport_Primary_Metatiles_Image_triggered();
+    void on_actionExport_Secondary_Metatiles_Image_triggered();
 
     void on_actionImport_Primary_Metatiles_triggered();
-
     void on_actionImport_Secondary_Metatiles_triggered();
+
+    void on_copyButton_metatileLabel_clicked();
+
+    void on_actionCut_triggered();
+    void on_actionCopy_triggered();
+    void on_actionPaste_triggered();
 
 private:
     void initUi();
@@ -127,6 +133,9 @@ private:
     void closeEvent(QCloseEvent*);
     void countMetatileUsage();
     void countTileUsage();
+    void copyMetatile(bool cut);
+    void pasteMetatile(const Metatile * toPaste);
+    bool replaceMetatile(uint16_t metatileId, const Metatile * src);
 
     Ui::TilesetEditor *ui;
     History<MetatileHistoryItem*> metatileHistory;
@@ -137,6 +146,7 @@ private:
     Project *project = nullptr;
     Map *map = nullptr;
     Metatile *metatile = nullptr;
+    Metatile *copiedMetatile = nullptr;
     int paletteId;
     bool tileXFlip;
     bool tileYFlip;

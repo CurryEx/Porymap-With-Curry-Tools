@@ -14,9 +14,3 @@ ui_*.h
 moc_*.h
 moc_*.cpp
 qrc_*.cpp
-
-cmake-build-*
-.github
-.idea
-.git
-build

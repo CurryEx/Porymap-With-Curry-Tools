@@ -1,0 +1,23 @@
+{
+	"BUILD_DIR" : "C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/porymap_master_autogen",
+	"CMAKE_BINARY_DIR" : "C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled",
+	"CMAKE_CURRENT_BINARY_DIR" : "C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled",
+	"CMAKE_CURRENT_SOURCE_DIR" : "C:/Workspace/QT/Porymap-With-Curry-Tools",
+	"CMAKE_SOURCE_DIR" : "C:/Workspace/QT/Porymap-With-Curry-Tools",
+	"INCLUDE_DIR" : "C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/porymap_master_autogen/include",
+	"INPUTS" : 
+	[
+		"C:/Workspace/QT/Porymap-With-Curry-Tools/resources/themes/midnight.qss",
+		"C:/Workspace/QT/Porymap-With-Curry-Tools/resources/themes/dark.qss"
+	],
+	"LOCK_FILE" : "C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/CMakeFiles/porymap_master_autogen.dir/AutoRcc_themes_3YJK5W5UP7_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "themes" ],
+	"OUTPUT_CHECKSUM" : "3YJK5W5UP7",
+	"OUTPUT_NAME" : "qrc_themes.cpp",
+	"RCC_EXECUTABLE" : "C:/Softwares/Qt/5.15.2/mingw81_64/bin/rcc.exe",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "C:/Workspace/QT/Porymap-With-Curry-Tools/cmake-build-debug-mingw-bundled/CMakeFiles/porymap_master_autogen.dir/AutoRcc_themes_3YJK5W5UP7_Used.txt",
+	"SOURCE" : "C:/Workspace/QT/Porymap-With-Curry-Tools/resources/themes.qrc",
+	"VERBOSITY" : 0
+}
